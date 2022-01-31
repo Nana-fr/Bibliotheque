@@ -90,7 +90,7 @@ CREATE TABLE Book (
     publication_date VARCHAR(20) NOT NULL,
     categoryId INT UNSIGNED NOT NULL,
     availability_book BOOLEAN NOT NULL,
-    userId INT UNSIGNED,
+    CustomerId INT UNSIGNED,
     borrowing_date Date,
     returning_date Date,
     PRIMARY KEY (id),
@@ -103,9 +103,9 @@ CREATE TABLE Book (
     CONSTRAINT FK_categoryId
         FOREIGN KEY (categoryId)
         REFERENCES Category(id),
-    CONSTRAINT FK_userId
-        FOREIGN KEY (userId)
-        REFERENCES User(id)
+    CONSTRAINT FK_CustomerId
+        FOREIGN KEY (CustomerId)
+        REFERENCES Customer(id)
 )
 ENGINE=INNODB;
 
