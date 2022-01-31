@@ -1,23 +1,10 @@
-DROP DATABASE IF EXISTS librairie_php;
-CREATE DATABASE librairie_php CHARACTER SET utf8;
-USE librairie_php;
+DROP DATABASE IF EXISTS library_php;
+CREATE DATABASE library_php CHARACTER SET utf8;
+USE library_php;
 
-DROP USER IF EXISTS 'librairiePHP'@'localhost';
-CREATE USER 'librairiePHP'@'localhost' IDENTIFIED BY 'librairie76';
-GRANT ALL PRIVILEGES ON librairie_php.* TO 'librairiePHP'@'localhost';
-
-CREATE TABLE Customer (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    card_number INT UNSIGNED UNIQUE NOT NULL,
-    firstname VARCHAR(30) NOT NULL,
-    lastname VARCHAR(50) NOT NULL,
-    PRIMARY KEY (id)
-)
-ENGINE=INNODB;
-
-INSERT INTO Customer
-VALUES (1, 147852, 'Jean', 'PETIT'),
-        (2, 984745, 'Marie', 'GRAND');
+DROP USER IF EXISTS 'libraryPHP'@'localhost';
+CREATE USER 'libraryPHP'@'localhost' IDENTIFIED BY 'library76';
+GRANT ALL PRIVILEGES ON library_php.* TO 'libraryPHP'@'localhost';
 
 CREATE TABLE Nationality (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -81,6 +68,21 @@ VALUES (1, "English"),
         (2, "Français"),
         (3, "中文");
 
+CREATE TABLE Status (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id)
+)
+ENGINE=INNODB;
+
+INSERT INTO Status
+VALUES (1, "Disponible"),
+        (2, "Emprunté"),
+        (3, "En réparation"),
+        (4, "En commande"),
+        (5, "Réservé"),
+        (6, "Perdu");
+
 CREATE TABLE Book (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     title VARCHAR(50) NOT NULL,
@@ -89,8 +91,7 @@ CREATE TABLE Book (
     languageId INT UNSIGNED NOT NULL,
     publication_date VARCHAR(20) NOT NULL,
     categoryId INT UNSIGNED NOT NULL,
-    availability_book BOOLEAN NOT NULL,
-    customerId INT UNSIGNED,
+    statusId INT UNSIGNED NOT NULL,
     borrowing_date Date,
     returning_date Date,
     PRIMARY KEY (id),
@@ -103,9 +104,9 @@ CREATE TABLE Book (
     CONSTRAINT FK_categoryId
         FOREIGN KEY (categoryId)
         REFERENCES Category(id),
-    CONSTRAINT FK_customerId
-        FOREIGN KEY (customerId)
-        REFERENCES Customer(id)
+    CONSTRAINT FK_statusId
+        FOREIGN KEY (statusId)
+        REFERENCES Status(id)
 )
 ENGINE=INNODB;
 
@@ -115,24 +116,24 @@ VALUES (1, "Les misérables", 1,
 Mourante et sans le sou, celle-ci lui demande de prendre soin de Cosette, sa fille confiée aux Thénardier. 
 Ce couple d’aubergistes, malhonnête et sans scrupules, exploitent la fillette jusqu’à ce que Jean Valjean 
 tienne sa promesse et l’adopte. Cosette devient alors sa raison de vivre. Mais son passé le rattrape et 
-l’inspecteur Javert le traque…", 2, '1862', 1, false, 1, '2022-01-05', '2022-01-19'),
-        (2, "Romeo and Juliet", 2, "An age-old vendetta between two powerful families erupts into bloodshed.", 1, '1597', 2, true, NULL, NULL, NULL),
+l’inspecteur Javert le traque…", 2, '1862', 1, 1, NULL, NULL),
+        (2, "Romeo and Juliet", 2, "An age-old vendetta between two powerful families erupts into bloodshed.", 1, '1597', 2, 1, NULL, NULL),
         (3, "Pride and Prejudice", 3, "When Charles Bingley, a rich single man, moves to the Netherfield estate, 
         the neighborhood residents are thrilled, especially Mrs. Bennet, who hopes to marry one of her five daughters 
         to him. When the Bennet daughters meet him at a local ball, they are impressed by his outgoing 
         personality and friendly disposition. They are less impressed, however, by Bingley's friend 
         Fitzwilliam Darcy, a landowning aristocrat who is too proud to speak to any of the locals and whom 
-        Elizabeth Bennet overhears refusing to dance with her.", 1, '1813-01-28', 1, false, 2, '2022-01-10', '2022-01-24'),
+        Elizabeth Bennet overhears refusing to dance with her.", 1, '1813-01-28', 1, 1, NULL, NULL),
         (4, "Frankenstein", 10, "An English explorer, Robert Walton, is on an expedition to the North Pole. 
         In letters to his sister Margaret Saville, he keeps his family informed of his situation and tells 
         about the difficult conditions on the ship. One day, when the ship is completely surrounded by ice, 
         a man in bad condition is taken aboard: Victor Frankenstein. As soon as his health allows it, he tells 
-        Walton the story of his life.", 1, '1818-01-01', 1, true, NULL, NULL, NULL),
+        Walton the story of his life.", 1, '1818-01-01', 1, 1, NULL, NULL),
         (5, "Le comte de Monte-Cristo", 5, "1815. Louis XVIII rétabli sur le trône se heurte à une opposition
          dont l'Empereur, relégué à l'île d'Elbe, songe déjà à profiter. Dans Marseille livrée à la 
          discorde civile, le moment est propice aux règlements de comptes politiques ou privés. 
          C'est ainsi que le marin Edmond Dantès, à la veille de son mariage, se retrouve, sans savoir 
-         pourquoi, arrêté et conduit au château d'If... ", 2, '1844-46', 1, false, 2, '2022-01-10', '2022-01-24'),
+         pourquoi, arrêté et conduit au château d'If... ", 2, '1844-46', 1, 1, NULL, NULL),
         (6, "Wuthering Heights", 6, "In 1801, Mr Lockwood, the new tenant at Thrushcross Grange in Yorkshire, 
         pays a visit to his landlord, Heathcliff, at his remote moorland farmhouse, Wuthering Heights. 
         There he meets a reserved young woman (later identified as Cathy Linton); Joseph, a cantankerous servant; 
@@ -141,9 +142,9 @@ l’inspecteur Javert le traque…", 2, '1862', 1, false, 1, '2022-01-05', '2022
         and has a nightmare in which a ghostly Catherine begs to enter through the window. Woken by Lockwood's fearful 
         yells, Heathcliff is troubled. Lockwood later returns to Thrushcross Grange in heavy snow, falls ill from 
         the cold and becomes bedridden. While he recovers, Lockwood's housekeeper Ellen 'Nelly' Dean tells him the 
-        story of the strange family. ", 1, '1847-12', 1, true, NULL, NULL, NULL),
+        story of the strange family. ", 1, '1847-12', 1, 1, NULL, NULL),
         (7, "红楼梦", 4, "《红楼梦》故事主线为贾宝玉、林黛玉及薛宝钗三人的爱情与婚姻悲剧，以及贾宝玉亲戚贾府、史家、薛家、
-        王家等四大家族的兴衰。", 3, '1791', 1, true, NULL, NULL, NULL),
+        王家等四大家族的兴衰。", 3, '1791', 1, 1, NULL, NULL),
         (8, "Les fleurs du mal", 9, "Avec Les Fleurs du Mal commence la poésie moderne : le lyrisme subjectif 
         s'efface devant cette « impersonnalité volontaire » que Baudelaire a lui-même postulée ; la nature et 
         ses retours cycliques cèdent la place au décor urbain et à ses changements marqués par l'Histoire, et 
@@ -155,18 +156,18 @@ l’inspecteur Javert le traque…", 2, '1862', 1, false, 1, '2022-01-05', '2022
         si précisément concertée. En 1861, la seconde édition fut augmentée de trente-cinq pièces, puis Baudelaire 
         continua d'écrire pour son livre d'autres poèmes encore. Mais après la censure, c'est la mort qui vint 
         l'empêcher de donner aux Fleurs du Mal la forme définitive qu'il souhaitait - et que nous ne connaîtrons 
-        jamais.", 2, '1857-08-23', 3, true, NULL, NULL, NULL),
+        jamais.", 2, '1857-08-23', 3, 1, NULL, NULL),
         (9, "三国演义", 11, "故事背景由公元184年東漢末年黃巾之亂開始，至公元280年西晉統一，共96年歷史，以儒家政治道德观念為
         核心主旨，同时揉合千百年来广大民众心理，表现对昏君贼臣大乱天下的痛恨，对明君良臣清平世界的渴慕。", 3, 
-        '14th century', 1, true, NULL, NULL, NULL),
+        '14th century', 1, 1, NULL, NULL),
         (10, "西游记", 7, "全书主要描写了孙悟空出世及大闹天宫后，遇见了唐僧、猪八戒、沙僧和白龙马，西行取经，一路上历经艰险、
         妖怪魔法高强，经历了九九八十一难，终于到达西天见到如来佛祖，最终五圣成真的故事。该小说以“唐僧取经”这一历史事件为蓝本，
-        通过作者的艺术加工，深刻地描绘了明代社会现实。", 3, "1592", 1, true, NULL, NULL, NULL),
+        通过作者的艺术加工，深刻地描绘了明代社会现实。", 3, "1592", 1, 1, NULL, NULL),
         (11, "水浒传", 8, "故事描寫了一百零八將各自不同的故事，從他們一個個被逼上梁山、逐漸壯大、起義造反到最後接受招安的
-        全過程。", 3, "14th century", 1, true, NULL, NULL, NULL),
+        全過程。", 3, "14th century", 1, 1, NULL, NULL),
         (12, "Ruy Blas", 1, "L'action se déroule dans l'Espagne de la fin du XVIIe siècle, sur plusieurs mois. 
         Le héros de ce drame romantique, Ruy Blas, déploie son intelligence et son éloquence, autant pour dénoncer 
         et humilier une oligarchie accapareuse des biens de l'État que pour se montrer digne d'aimer la reine 
         d'Espagne. Mais cette voix du peuple, éprise de justice, éclairée par l'amour, est prisonnière d'une livrée 
         de valet et d'un maître attaché à perdre la réputation de la Reine en lui donnant « son laquais pour amant ».", 2,
-        '1838-11-08', 2, true, NULL, NULL, NULL);
+        '1838-11-08', 2, 1, NULL, NULL);
