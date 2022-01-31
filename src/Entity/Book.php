@@ -96,6 +96,12 @@ class Book
      */
     private $languageid;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="books")
+     */
+    private $user;
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -205,6 +211,18 @@ class Book
     public function setLanguageid(?Language $languageid): self
     {
         $this->languageid = $languageid;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
