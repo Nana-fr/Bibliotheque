@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Book
  *
- * @ORM\Table(name="book", indexes={@ORM\Index(name="FK_customerId", columns={"customerId"}), @ORM\Index(name="FK_writerId", columns={"writerId"}), @ORM\Index(name="FK_languageId", columns={"languageId"}), @ORM\Index(name="FK_categoryId", columns={"categoryId"})})
+ * @ORM\Table(name="book", indexes={@ORM\Index(name="FK_categoryId", columns={"categoryId"}), @ORM\Index(name="FK_statusId", columns={"statusId"}), @ORM\Index(name="FK_writerId", columns={"writerId"}), @ORM\Index(name="FK_languageId", columns={"languageId"})})
  * @ORM\Entity
  */
 class Book
@@ -43,13 +43,6 @@ class Book
     private $publicationDate;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="availability_book", type="boolean", nullable=false)
-     */
-    private $availabilityBook;
-
-    /**
      * @var \DateTime|null
      *
      * @ORM\Column(name="borrowing_date", type="date", nullable=true)
@@ -62,26 +55,6 @@ class Book
      * @ORM\Column(name="returning_date", type="date", nullable=true)
      */
     private $returningDate;
-
-    /**
-     * @var \Language
-     *
-     * @ORM\ManyToOne(targetEntity="Language")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="languageId", referencedColumnName="id")
-     * })
-     */
-    private $languageid;
-
-    /**
-     * @var \Customer
-     *
-     * @ORM\ManyToOne(targetEntity="Customer")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="customerId", referencedColumnName="id")
-     * })
-     */
-    private $customerid;
 
     /**
      * @var \Writer
@@ -102,6 +75,26 @@ class Book
      * })
      */
     private $categoryid;
+
+    /**
+     * @var \Status
+     *
+     * @ORM\ManyToOne(targetEntity="Status")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="statusId", referencedColumnName="id")
+     * })
+     */
+    private $statusid;
+
+    /**
+     * @var \Language
+     *
+     * @ORM\ManyToOne(targetEntity="Language")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="languageId", referencedColumnName="id")
+     * })
+     */
+    private $languageid;
 
     public function getId(): ?int
     {
@@ -144,18 +137,6 @@ class Book
         return $this;
     }
 
-    public function getAvailabilityBook(): ?bool
-    {
-        return $this->availabilityBook;
-    }
-
-    public function setAvailabilityBook(bool $availabilityBook): self
-    {
-        $this->availabilityBook = $availabilityBook;
-
-        return $this;
-    }
-
     public function getBorrowingDate(): ?\DateTimeInterface
     {
         return $this->borrowingDate;
@@ -180,30 +161,6 @@ class Book
         return $this;
     }
 
-    public function getLanguageid(): ?Language
-    {
-        return $this->languageid;
-    }
-
-    public function setLanguageid(?Language $languageid): self
-    {
-        $this->languageid = $languageid;
-
-        return $this;
-    }
-
-    public function getCustomerid(): ?Customer
-    {
-        return $this->customerid;
-    }
-
-    public function setCustomerid(?Customer $customerid): self
-    {
-        $this->customerid = $customerid;
-
-        return $this;
-    }
-
     public function getWriterid(): ?Writer
     {
         return $this->writerid;
@@ -224,6 +181,30 @@ class Book
     public function setCategoryid(?Category $categoryid): self
     {
         $this->categoryid = $categoryid;
+
+        return $this;
+    }
+
+    public function getStatusid(): ?Status
+    {
+        return $this->statusid;
+    }
+
+    public function setStatusid(?Status $statusid): self
+    {
+        $this->statusid = $statusid;
+
+        return $this;
+    }
+
+    public function getLanguageid(): ?Language
+    {
+        return $this->languageid;
+    }
+
+    public function setLanguageid(?Language $languageid): self
+    {
+        $this->languageid = $languageid;
 
         return $this;
     }
