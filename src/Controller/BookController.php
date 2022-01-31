@@ -30,7 +30,7 @@ class BookController extends AbstractController
         ]);
     }
     #[Route('/book/add', name: 'book_add')]
-    public function create(Request $request, ManagerRegistry $doctrine): Response
+    public function addBook(Request $request, ManagerRegistry $doctrine): Response
     {
         $entityManager = $doctrine->getManager();
         // creates a book object and initializes some data for this example
@@ -93,6 +93,18 @@ class BookController extends AbstractController
                 'form' => $form,
             ]); 
             
+    }
+    #[Route('/book/delete/{id}', name: 'book_delete')]
+    public function deleteBook(ManagerRegistry $doctrine, int $id): Response
+    {
+        $entityManager = $doctrine->getManager();
+        $book = $entityManager->getRepository(Book::class)->find($id);
+        if ($book -> getStatusid() -> getName() !== "Emprunté" && $book -> getStatusid() -> getName() !== "Réservé") {
+            $entityManager->remove($book);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('books_listing');
     }
        
 }

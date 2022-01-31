@@ -17,6 +17,7 @@
         <li>{{ book.getWriterid().getFirstname() }}</li>
 
         <li>{{ book.getStatusid().getName() }}</li>
+        <li><a href="{{ path('book_delete', {'id': book.getId()} )}}"><button class="btn btn-danger" >Supprimer</button></a></li>
         <br>
     {% endfor %}
     </ul>
