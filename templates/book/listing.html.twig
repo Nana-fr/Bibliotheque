@@ -17,7 +17,9 @@
         <li>{{ book.getWriterid().getFirstname() }}</li>
 
         <li>{{ book.getStatusid().getName() }}</li>
+        {% if book.getStatusid().getName() != "Emprunté" and book.getStatusid().getName() != "Réservé" %}
         <li><a href="{{ path('book_delete', {'id': book.getId()} )}}"><button class="btn btn-danger" >Supprimer</button></a></li>
+        {% endif %}
         <br>
     {% endfor %}
     </ul>
