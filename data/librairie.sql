@@ -4,7 +4,7 @@ USE librairie_php;
 
 DROP USER IF EXISTS 'librairiePHP'@'localhost';
 CREATE USER 'librairiePHP'@'localhost' IDENTIFIED BY 'librairie76';
-GRANT ALL PRIVILEGES ON library_gr_php.* TO 'librairiePHP'@'localhost';
+GRANT ALL PRIVILEGES ON librairie_php.* TO 'librairiePHP'@'localhost';
 
 CREATE TABLE Customer (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -90,7 +90,7 @@ CREATE TABLE Book (
     publication_date VARCHAR(20) NOT NULL,
     categoryId INT UNSIGNED NOT NULL,
     availability_book BOOLEAN NOT NULL,
-    CustomerId INT UNSIGNED,
+    customerId INT UNSIGNED,
     borrowing_date Date,
     returning_date Date,
     PRIMARY KEY (id),
@@ -103,8 +103,8 @@ CREATE TABLE Book (
     CONSTRAINT FK_categoryId
         FOREIGN KEY (categoryId)
         REFERENCES Category(id),
-    CONSTRAINT FK_CustomerId
-        FOREIGN KEY (CustomerId)
+    CONSTRAINT FK_customerId
+        FOREIGN KEY (customerId)
         REFERENCES Customer(id)
 )
 ENGINE=INNODB;
