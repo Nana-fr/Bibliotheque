@@ -129,7 +129,8 @@ class BookController extends AbstractController
             // $form->getData() holds the submitted values
             // but, the original `$task` variable has also been updated
             $book = $form->getData();
-            $book->getStatusid()->setName('Emprunté');
+            $status = $entityManager->getRepository(Status::class)->find(array('id'=> 2));
+            $book->setStatusid($status);
             $book->setBorrowingDate(date_create(date('Y-m-d')));
             $book->generateReturningDate(date_create(date('Y-m-d')));
             // actually executes the queries (i.e. the INSERT query)
@@ -143,4 +144,17 @@ class BookController extends AbstractController
         ]);
     }
        
+    #[Route('/book/return/{id}', name: 'book_return')]
+    public function returnBook(ManagerRegistry $doctrine, int $id): Response
+    {
+        $entityManager = $doctrine->getManager();
+        $book = $entityManager->getRepository(Book::class)->find($id);
+        $status = $entityManager->getRepository(Status::class)->find(array('id'=> 1));
+        $book->setStatusid($status);
+        $book->setBorrowingDate(null);
+        $book->setReturningDate(null);
+        $book->setUser(null);
+        $entityManager->flush();
+        return $this->redirectToRoute('books_listing');
+    }
 }

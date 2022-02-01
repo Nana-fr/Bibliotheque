@@ -19,4 +19,16 @@ class UserController extends AbstractController
             'users' => $users,
         ]);
     }
+
+    #[Route('/user/infos/{id}', name: 'user_infos')]
+    public function getOneUser(ManagerRegistry $doctrine, int $id): Response
+    {
+        $entityManager = $doctrine->getManager();
+        $user = $entityManager->getRepository(User::class)->find($id);
+        //  dump($user->getBooks());
+        // dd($user);
+        return $this->render('user/infos.html.twig', [
+            'user' => $user,
+        ]);
+    }
 }
