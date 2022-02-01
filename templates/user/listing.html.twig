@@ -12,7 +12,7 @@
     <h1>Liste des utilisateurs!🎈😎</h1>
       {% for user in users %}
 
-        <li>{{ user.getFirstname() }}</li>
+        <li>{{ user.getFirstname() }} {{ user.getLastname() }}</li>
         <li><a href="{{ path('user_infos', {'id': user.getId()} )}}" class='btn btn-success'>Plus d'infos</a></li>
     {% endfor %}
 </div>
