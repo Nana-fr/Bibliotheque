@@ -10,13 +10,16 @@
 
 <div class="example-wrapper">
     <h1>Catalogue</h1>
+    <li><a href="{{ path('book_add') }}"><button class="btn btn-info" >Ajouter un livre</button></a></li>
+    <br>
     <ul>
     {% for book in books %}
 
         <li>{{ book.getTitle() }}</li>
-        <li>{{ book.getWriterid().getFirstname() }}</li>
+        <li>{{ book.getWriterid().getFirstname() }} {{ book.getWriterid().getLastname() }}</li>
 
-        <li>{{ book.getStatusid().getName() }}</li>
+        <li>{{ book.getStatusid().getName() }} </li>
+        <li><a href="{{ path('book_infos', {'id': book.getId()} )}}"><button class="btn btn-success" >Plus d'infos</button></a></li>
         {% if book.getStatusid().getName() != "Emprunté" and book.getStatusid().getName() != "Réservé" %}
         <li><a href="{{ path('book_delete', {'id': book.getId()} )}}"><button class="btn btn-danger" >Supprimer</button></a></li>
         {% endif %}

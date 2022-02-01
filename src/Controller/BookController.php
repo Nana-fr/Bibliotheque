@@ -106,5 +106,17 @@ class BookController extends AbstractController
 
         return $this->redirectToRoute('books_listing');
     }
+
+    #[Route('/book/infos/{id}', name: 'book_infos')]
+    public function getBook(ManagerRegistry $doctrine, int $id): Response
+    {
+        $entityManager = $doctrine->getManager();
+        $book = $entityManager->getRepository(Book::class)->find($id);
+        
+
+        return $this->render('book/infos.html.twig', [
+            'book' => $book,
+        ]);
+    }
        
 }
