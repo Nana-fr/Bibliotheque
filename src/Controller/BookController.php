@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use App\Entity\User;
 use App\Entity\Book;
 use App\Entity\Writer;
 use App\Entity\Category;
@@ -108,14 +108,38 @@ class BookController extends AbstractController
     }
 
     #[Route('/book/infos/{id}', name: 'book_infos')]
-    public function getBook(ManagerRegistry $doctrine, int $id): Response
+    public function getBook(ManagerRegistry $doctrine, int $id,Request $request): Response
     {
         $entityManager = $doctrine->getManager();
         $book = $entityManager->getRepository(Book::class)->find($id);
-        
+         
+        $form = $this->createFormBuilder($book)
+        ->add('user', EntityType::class, [
+            // looks for choices from this entity
+            'class' => User::class,
+            // uses the User.username property as the visible option string
+            'choice_label' => 'card_number',
+            'attr' => ['class' => 'form-control',
+            ]])
+        ->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-primary']])
+        ->getForm();
 
-        return $this->render('book/infos.html.twig', [
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // $form->getData() holds the submitted values
+            // but, the original `$task` variable has also been updated
+            $book = $form->getData();
+            $book->getStatusid()->setName('Emprunté');
+            $book->setBorrowingDate(date_create(date('Y-m-d')));
+            $book->generateReturningDate(date_create(date('Y-m-d')));
+            // actually executes the queries (i.e. the INSERT query)
+            $entityManager->flush();
+            // return $this->redirectToRoute('books_listing');
+        }
+
+        return $this->renderForm('book/infos.html.twig', [
             'book' => $book,
+            'form' => $form,
         ]);
     }
        
