@@ -227,5 +227,10 @@ class Book
         return $this;
     }
 
+    public function generateReturningDate(\DateTimeInterface $date): self {
+        $returning_date = $date->add(new \DateInterval('P14D'));
+        $this->returningDate = $returning_date;
+        return $this;
+    }
 
 }

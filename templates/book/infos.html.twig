@@ -26,11 +26,11 @@
         {% if book.getStatusid().getName() is same as("Disponible") %}
         <li><button class="btn btn-danger" onclick="displayForm()">Emprunter</button></li>
         <div id="borrowingForm" class="d-none">
-        <p>Hello</p>
+        {{form(form)}}
         </div>
-        {# {% elseif book.getStatusid().getName() is same as("Emprunté") and book.getStatusid().getName() is same as("Réservé") %}
-        <li>{{ book.getUser().getFirstname() }} {{ book.getUser().getLastname() }} Possède le livre</li> #}
-        
+        {% elseif book.getStatusid().getName() is same as("Emprunté") or book.getStatusid().getName() is same as("Réservé") %}
+        <li>{{ book.getUser().getFirstname() }} {{ book.getUser().getLastname() }} Possède le livre</li>
+        <li>Date de retour : {{ book.getReturningDate().format('Y-m-d') }}</li>
         {% endif %}
         <br>
     </ul>
