@@ -31,6 +31,7 @@
         {% elseif book.getStatusid().getName() is same as("Emprunté") or book.getStatusid().getName() is same as("Réservé") %}
         <li>{{ book.getUser().getFirstname() }} {{ book.getUser().getLastname() }} Possède le livre</li>
         <li>Date de retour : {{ book.getReturningDate().format('Y-m-d') }}</li>
+        <a name="" id="" class="btn btn-primary" href="{{ path('book_return', {'id': book.getId()} )}}" role="button">RETOUR</a>
         {% endif %}
         <br>
     </ul>

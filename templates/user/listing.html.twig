@@ -13,7 +13,7 @@
       {% for user in users %}
 
         <li>{{ user.getFirstname() }}</li>
-        
+        <li><a href="{{ path('user_infos', {'id': user.getId()} )}}" class='btn btn-success'>Plus d'infos</a></li>
     {% endfor %}
 </div>
 {% endblock %}
