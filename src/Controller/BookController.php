@@ -21,12 +21,50 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class BookController extends AbstractController
 {
     #[Route('/books/listing', name: 'books_listing')]
-    public function bookListing(ManagerRegistry $doctrine): Response
+    public function bookListing(ManagerRegistry $doctrine, Request $request): Response
     {
-        $books = $doctrine->getRepository(Book::class)->findAll();
+        $data = [];
+        $formFilter = $this->createFormBuilder()
+        ->add('writerid', EntityType::class,[
+            'label' => 'Writer :',
+            'class' => Writer::class,
+            'required' => false,
+            'choice_label' => function ($writer) {
+                return $writer->getFirstname() . ' ' . $writer->getLastname();
+            },'attr' => ['class' => 'form-control my-2']])
+        ->add('languageid', EntityType::class,[
+            'label' => 'Language :',
+            'class' => Language::class,
+            'required' => false,
+            'choice_label' => 'name',
+            'attr' => ['class' => 'form-control my-2']])
+        ->add('categoryid', EntityType::class,[
+            'label' => 'Category :',
+            'required' => false,
+            'class' => Category::class,
+            'choice_label' => 'name',
+            'attr' => ['class' => 'form-control my-2']])
+        ->add('statusid', EntityType::class, [
+            'label' => 'Statut :',
+            'required' => false,
+            'class' => Status::class,
+            'choice_label' => 'name',
+            'attr' => ['class' => 'form-control my-2']])
+        ->add('save', SubmitType::class, ['label' => 'Filter','attr' => ['class' => 'btn btn-dark mt-3']])
+        ->getForm();
 
-        return $this->render('book/listing.html.twig', [
+        $formFilter->handleRequest($request);
+
+    if ($formFilter->isSubmitted() && $formFilter->isValid()) {
+        
+        $data = $formFilter->getData();
+        $data = array_filter($data);
+    }
+
+        $books=$doctrine->getRepository(Book::class)->findBy($data);
+        return $this->renderForm('book/listing.html.twig', [
             'books' => $books,
+            'formFilter' => $formFilter,
         ]);
     }
     #[Route('/book/add', name: 'book_add')]
