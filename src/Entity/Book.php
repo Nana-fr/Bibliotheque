@@ -233,4 +233,10 @@ class Book
         return $this;
     }
 
+    public function getRemainingDays():string {
+        $result = date_diff($this->getReturningDate(), date_create(date('y-m-d')));
+        $remainingDays = $result->format('%d');
+        return $remainingDays;
+    }
+
 }
