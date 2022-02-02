@@ -8,14 +8,19 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
-<div class="example-wrapper">
-    <h1>Catalogue</h1>
-    <li><a href="{{ path('book_add') }}"><button class="btn btn-info" >Ajouter un livre</button></a></li>
-    <br>
-    <ul>
-    {% for book in books %}
+<main class='container'>
+    <h1 class='text-center text-decoration-underline my-5'>Catalogue <i class="fas fa-book"></i></h1>
 
-        <li>{{ book.getTitle() }}</li>
+    <div class='row'>
+        <div class='col-4'>
+            <a class="btn btn-info my-5" href="{{ path('book_add') }}">Ajouter un livre</a>
+    {# <br> #}
+    {# <ul> #}
+        </div>
+        <div class='col-8'>
+    {% for book in books %}
+        <div class="d-flex align-items-center">
+        {# <li>{{ book.getTitle() }}</li>
         <li>{{ book.getWriterid().getFirstname() }} {{ book.getWriterid().getLastname() }}</li>
 
         <li>{{ book.getStatusid().getName() }} </li>
@@ -23,9 +28,37 @@
         {% if book.getStatusid().getName() != "Emprunté" and book.getStatusid().getName() != "Réservé" %}
         <li><a href="{{ path('book_delete', {'id': book.getId()} )}}"><button class="btn btn-danger" >Supprimer</button></a></li>
         {% endif %}
-        <br>
-    {% endfor %}
-    </ul>
+        <br> #}
 
-</div>
+            <div class="card my-4" style="max-width: 600px">
+                <div class="card-header">{{ book.getTitle() }}, {{ book.getWriterid().getFirstname() }} {{ book.getWriterid().getLastname() }}</div>
+                <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="../../image/black.jpg" class="img-fluid rounded-start" alt="book">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                    {# <h5 class="card-title"></h5> #}
+                    <p class="card-text plot" style="height:70px">{{ book.getPlot() }}</p>
+                    <a href="{{ path('book_infos', {'id': book.getId()} )}}"><button class="btn btn-success" >Plus d'infos</button></a>
+                    </div>
+                </div>
+                </div>
+                <div class="card-footer text-end">
+                    {{ book.getStatusid().getName() }}
+                </div>
+            </div>
+            <div>
+                {% if book.getStatusid().getName() != "Emprunté" and book.getStatusid().getName() != "Réservé" %}
+                        <a class="btn btn-danger ms-5" href="{{ path('book_delete', {'id': book.getId()} )}}">Supprimer</a>
+                {% endif %}
+            </div>  
+        </div>
+    {% endfor %}
+        </div>
+    {# </ul> #}
+
+    </div>
+
+</main>
 {% endblock %}

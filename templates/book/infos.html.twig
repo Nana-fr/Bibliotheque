@@ -12,9 +12,9 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
-<div class="example-wrapper">
-    <h1>Description</h1>
-    <ul>
+<main class="example-wrapper">
+    <h1 class='text-center text-decoration-underline my-5'>Description</h1>
+    {# <ul>
 
         <li>{{ book.getTitle() }}</li>
         <li>{{ book.getWriterid().getFirstname() }} {{ book.getWriterid().getLastname() }}</li>
@@ -34,7 +34,42 @@
         <a name="" id="" class="btn btn-primary" href="{{ path('book_return', {'id': book.getId()} )}}" role="button">RETOUR</a>
         {% endif %}
         <br>
-    </ul>
+    </ul> #}
 
-</div>
+    <div class="card">
+        <h5 class="card-header">{{ book.getTitle() }}, {{ book.getWriterid().getFirstname() }} {{ book.getWriterid().getLastname() }}</h5>
+        <div class="card-body">
+          <h5 class="card-title">{{ book.getPublicationDate() }}, {{ book.getCategoryid().getName() }}, {{ book.getLanguageid().getName() }}</h5>
+          <p class="card-text">{{ book.getPlot() }}</p>
+          <p class="card-text text-center">{{ book.getStatusid().getName() }}</p>
+        </div>
+    </div>
+
+    {% if book.getStatusid().getName() is same as("Disponible") %}
+        <button class="btn btn-danger" onclick="displayForm()">Emprunter</button>
+        <div id="borrowingForm" class="d-none">
+            {{form(form)}}
+        </div>
+    {% elseif book.getStatusid().getName() is same as("Emprunté") or book.getStatusid().getName() is same as("Réservé") %}
+    <table class='table table-striped text-center'>
+        <tr>
+            <th colspan="2">Informations sur l'emprunteur:</th>
+        </tr>
+        <tr>
+            <td>Nom:</td>
+            <td>{{book.getUser().getFirstname()}} {{book.getUser().getLastname()}}</td>
+        </tr>
+        <tr>
+            <td>Date d'emprunt:</td>
+            <td>{{book.getBorrowingDate().format('Y-m-d')}}</td>
+        </tr>
+        <tr>
+            <td>Date de retour:</td>
+            <td>{{book.getReturningDate().format('Y-m-d')}}</td>
+        </tr>
+    </table>
+    <a class='btn btn-dark' href='{{path('book_return', {id: book.getId()})}}'>Livre rendu</a>
+    {% endif %}
+
+</main>
 {% endblock %}

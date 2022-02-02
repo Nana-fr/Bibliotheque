@@ -1,0 +1,12 @@
+.plot {
+    text-overflow:'...';
+    overflow: hidden;
+    white-space: nowrap;
+}
+h1 {
+    margin: 0rem;
+}
+
+header {
+    height: 15vh;
+}
