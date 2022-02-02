@@ -1,5 +1,40 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    <link rel='stylesheet' type="text/css" href='https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css'>
+{% endblock %}
+
+{% block javascripts %}
+            <script type='text/javascript' src="https://code.jquery.com/jquery-3.5.1.js"></script>
+            <script type='text/javascript' src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+            <script type='text/javascript'>
+                $(document).ready(function() {
+                $('#example').DataTable({language: {
+                    processing:     "Traitement en cours...",
+                    search:         "Rechercher&nbsp;:",
+                    lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix:    "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable:     "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first:      "Premier",
+                        previous:   "Pr&eacute;c&eacute;dent",
+                        next:       "Suivant",
+                        last:       "Dernier"
+                    },
+                    aria: {
+                        sortAscending:  ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    }
+                    }});
+                } );
+            </script>
+{% endblock %}
+
 {% block title %}Catalogue{% endblock %}
 
 {% block body %}
@@ -12,14 +47,23 @@
     <h1 class='text-center text-decoration-underline my-5'>Catalogue <i class="fas fa-book"></i></h1>
 
     <div class='row'>
-        <div class='col-4'>
+        <div class='col-2'>
             <a class="btn btn-info my-5" href="{{ path('book_add') }}">Ajouter un livre</a>
+            {{form(formFilter)}}
     {# <br> #}
     {# <ul> #}
         </div>
-        <div class='col-8'>
+        <div class='col-10'>
+        <table id='example' class='display'>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
     {% for book in books %}
-        <div class="d-flex align-items-center">
+        <tr>
         {# <li>{{ book.getTitle() }}</li>
         <li>{{ book.getWriterid().getFirstname() }} {{ book.getWriterid().getLastname() }}</li>
 
@@ -29,7 +73,7 @@
         <li><a href="{{ path('book_delete', {'id': book.getId()} )}}"><button class="btn btn-danger" >Supprimer</button></a></li>
         {% endif %}
         <br> #}
-
+            <td>
             <div class="card my-4" style="max-width: 600px">
                 <div class="card-header">{{ book.getTitle() }}, {{ book.getWriterid().getFirstname() }} {{ book.getWriterid().getLastname() }}</div>
                 <div class="row g-0">
@@ -48,13 +92,18 @@
                     {{ book.getStatusid().getName() }}
                 </div>
             </div>
+        </td>
+        <td>
             <div>
                 {% if book.getStatusid().getName() != "Emprunté" and book.getStatusid().getName() != "Réservé" %}
                         <a class="btn btn-danger ms-5" href="{{ path('book_delete', {'id': book.getId()} )}}">Supprimer</a>
                 {% endif %}
-            </div>  
-        </div>
+            </div> 
+          </td>   
+        </tr>
     {% endfor %}
+    </tbody>
+    </table>
         </div>
     {# </ul> #}
 
