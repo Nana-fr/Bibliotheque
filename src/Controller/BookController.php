@@ -175,10 +175,11 @@ class BookController extends AbstractController
             $entityManager->flush();
             // return $this->redirectToRoute('books_listing');
         }
-
+        $today = date_create(date('y-m-d'));
         return $this->renderForm('book/infos.html.twig', [
             'book' => $book,
             'form' => $form,
+            'today' => $today,
         ]);
     }
        

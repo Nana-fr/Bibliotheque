@@ -67,6 +67,15 @@
             <td>Date de retour:</td>
             <td>{{book.getReturningDate().format('Y-m-d')}}</td>
         </tr>
+        <tr>
+            {% if book.getReturningDate() > today %}
+                <td>Nombre de jours avant retour :</td>
+                {% else %}
+                <td>Nombre de jours de retard :</td>
+            {% endif %}
+                <td>{{book.getRemainingDays()}}</td>
+
+        </tr>
     </table>
     <a class='btn btn-dark' href='{{path('book_return', {id: book.getId()})}}'>Livre rendu</a>
     {% endif %}
