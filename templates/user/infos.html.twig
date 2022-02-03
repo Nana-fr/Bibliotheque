@@ -24,8 +24,8 @@
 		<li>{{ user.getFirstname() }}</li>
 		<li>{{ user.getLastname() }}</li>
 		<li>{{ user.getCardNumber() }}</li>
-        {% for book in user.getBooks() %}
-			<li>{{ book.getTitle() }}</li>
+        {% for book in user.getBorrowings() %}
+			<li>{{ book.getBook().getTitle() }}</li>
         {% endfor %}
         
         {# {% if user.getBooks() %}
