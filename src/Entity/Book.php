@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Book
  *
- * @ORM\Table(name="book", indexes={@ORM\Index(name="FK_categoryId", columns={"categoryId"}), @ORM\Index(name="FK_statusId", columns={"statusId"}), @ORM\Index(name="FK_writerId", columns={"writerId"}), @ORM\Index(name="FK_languageId", columns={"languageId"})})
+ * @ORM\Table(name="book", indexes={@ORM\Index(name="FK_categoryId", columns={"categoryId"}), @ORM\Index(name="FK_writerId", columns={"writerId"}), @ORM\Index(name="FK_languageId", columns={"languageId"})})
  * @ORM\Entity
  */
 class Book
@@ -43,20 +45,6 @@ class Book
     private $publicationDate;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="borrowing_date", type="date", nullable=true)
-     */
-    private $borrowingDate;
-
-    /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="returning_date", type="date", nullable=true)
-     */
-    private $returningDate;
-
-    /**
      * @var \Writer
      *
      * @ORM\ManyToOne(targetEntity="Writer")
@@ -76,15 +64,6 @@ class Book
      */
     private $categoryid;
 
-    /**
-     * @var \Status
-     *
-     * @ORM\ManyToOne(targetEntity="Status")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="statusId", referencedColumnName="id")
-     * })
-     */
-    private $statusid;
 
     /**
      * @var \Language
@@ -97,9 +76,31 @@ class Book
     private $languageid;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="books")
+     * @ORM\Column(type="integer")
      */
-    private $user;
+    private $stock;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $quantity;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Status::class, inversedBy="books")
+     */
+    private $status;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Borrowing::class, mappedBy="book")
+     */
+    private $borrowings;
+
+    public function __construct()
+    {
+        $this->status = new ArrayCollection();
+        $this->borrowings = new ArrayCollection();
+    }
+
 
 
     public function getId(): ?int
@@ -143,30 +144,6 @@ class Book
         return $this;
     }
 
-    public function getBorrowingDate(): ?\DateTimeInterface
-    {
-        return $this->borrowingDate;
-    }
-
-    public function setBorrowingDate(?\DateTimeInterface $borrowingDate): self
-    {
-        $this->borrowingDate = $borrowingDate;
-
-        return $this;
-    }
-
-    public function getReturningDate(): ?\DateTimeInterface
-    {
-        return $this->returningDate;
-    }
-
-    public function setReturningDate(?\DateTimeInterface $returningDate): self
-    {
-        $this->returningDate = $returningDate;
-
-        return $this;
-    }
-
     public function getWriterid(): ?Writer
     {
         return $this->writerid;
@@ -191,17 +168,6 @@ class Book
         return $this;
     }
 
-    public function getStatusid(): ?Status
-    {
-        return $this->statusid;
-    }
-
-    public function setStatusid(?Status $statusid): self
-    {
-        $this->statusid = $statusid;
-
-        return $this;
-    }
 
     public function getLanguageid(): ?Language
     {
@@ -211,18 +177,6 @@ class Book
     public function setLanguageid(?Language $languageid): self
     {
         $this->languageid = $languageid;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
 
         return $this;
     }
@@ -237,6 +191,85 @@ class Book
         $result = date_diff($this->getReturningDate(), date_create(date('y-m-d')));
         $remainingDays = $result->format('%d');
         return $remainingDays;
+    }
+
+    public function getStock(): ?int
+    {
+        return $this->stock;
+    }
+
+    public function setStock(int $stock): self
+    {
+        $this->stock = $stock;
+
+        return $this;
+    }
+
+    public function getQuantity(): ?int
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(int $quantity): self
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection|Status[]
+     */
+    public function getStatus(): Collection
+    {
+        return $this->status;
+    }
+
+    public function addStatus(Status $status): self
+    {
+        if (!$this->status->contains($status)) {
+            $this->status[] = $status;
+        }
+
+        return $this;
+    }
+
+    public function removeStatus(Status $status): self
+    {
+        $this->status->removeElement($status);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Borrowing[]
+     */
+    public function getBorrowings(): Collection
+    {
+        return $this->borrowings;
+    }
+
+    public function addBorrowing(Borrowing $borrowing): self
+    {
+        if (!$this->borrowings->contains($borrowing)) {
+            $this->borrowings[] = $borrowing;
+            $borrowing->setBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBorrowing(Borrowing $borrowing): self
+    {
+        if ($this->borrowings->removeElement($borrowing)) {
+            // set the owning side to null (unless already changed)
+            if ($borrowing->getBook() === $this) {
+                $borrowing->setBook(null);
+            }
+        }
+
+        return $this;
     }
 
 }

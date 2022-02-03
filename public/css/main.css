@@ -10,3 +10,12 @@ h1 {
 header {
     height: 15vh;
 }
+
+img {
+    width: 120px;
+    height: 150px;
+}
+
+footer {
+    height: 8vh;
+}
