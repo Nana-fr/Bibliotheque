@@ -102,8 +102,9 @@ class Borrowing
         return $this;
     }
 
-    public function getRemainingDays(\DateTimeInterface $date):string {
-        $result = date_diff($date, date_create(date('Y-m-d')));
+    public function getRemainingDays():string {
+        $result = date_diff($this->getDueDate(), date_create(date('Y-m-d')));
+        // dump($this->getDueDate());
         $remainingDays = $result->format('%d');
         return $remainingDays;
     }
