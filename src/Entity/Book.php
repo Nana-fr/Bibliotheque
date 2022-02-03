@@ -95,6 +95,11 @@ class Book
      */
     private $borrowings;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $availability;
+
     public function __construct()
     {
         $this->status = new ArrayCollection();
@@ -205,31 +210,6 @@ class Book
         return $this;
     }
 
-
-    /**
-     * @return Collection|Status[]
-     */
-    public function getStatus(): Collection
-    {
-        return $this->status;
-    }
-
-    public function addStatus(Status $status): self
-    {
-        if (!$this->status->contains($status)) {
-            $this->status[] = $status;
-        }
-
-        return $this;
-    }
-
-    public function removeStatus(Status $status): self
-    {
-        $this->status->removeElement($status);
-
-        return $this;
-    }
-
     /**
      * @return Collection|Borrowing[]
      */
@@ -264,6 +244,42 @@ class Book
     {
         $realStock = $this->getStock() + $value;
         $this->stock = $realStock;
+        return $this;
+    }
+
+    public function getAvailability(): ?bool
+    {
+        return $this->availability;
+    }
+
+    public function setAvailability(bool $availability): self
+    {
+        $this->availability = $availability;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Status[]
+     */
+    public function getStatus(): Collection
+    {
+        return $this->status;
+    }
+
+    public function addStatus(Status $status): self
+    {
+        if (!$this->status->contains($status)) {
+            $this->status[] = $status;
+        }
+
+        return $this;
+    }
+
+    public function removeStatus(Status $status): self
+    {
+        $this->status->removeElement($status);
+
         return $this;
     }
     

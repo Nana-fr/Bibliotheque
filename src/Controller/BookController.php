@@ -6,15 +6,16 @@ use App\Entity\Book;
 use App\Entity\Writer;
 use App\Entity\Category;
 use App\Entity\Language;
-use App\Entity\Status;
 use App\Entity\Borrowing;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -44,12 +45,16 @@ class BookController extends AbstractController
             'class' => Category::class,
             'choice_label' => 'name',
             'attr' => ['class' => 'form-control my-2']])
-        ->add('statusid', EntityType::class, [
-            'label' => 'Statut :',
+        ->add('availability', ChoiceType::class,[
+            'label' => 'Availability :',
             'required' => false,
-            'class' => Status::class,
-            'choice_label' => 'name',
-            'attr' => ['class' => 'form-control my-2']])
+            'choices'  => [
+                'Disponible' => true,
+                'Emprunté'     => false,
+
+            ],
+            'attr' => ['class' => 'form-control my-2']
+        ])
         ->add('save', SubmitType::class, ['label' => 'Filter','attr' => ['class' => 'btn btn-dark mt-3']])
         ->getForm();
 
@@ -101,13 +106,7 @@ class BookController extends AbstractController
                 'choice_label' => 'name',
                 'attr' => ['class' => 'form-control',
                 ]])
-            ->add('statusid', EntityType::class, [
-                     // looks for choices from this entity
-                'class' => Status::class,
-                // uses the User.username property as the visible option string
-                'choice_label' => 'name',
-                'attr' => ['class' => 'form-control',
-                ]])
+            ->add('quantity', IntegerType::class, ['attr' => ['class' => 'form-control']])
             ->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-primary']])
             ->getForm();
 
@@ -116,6 +115,7 @@ class BookController extends AbstractController
             // $form->getData() holds the submitted values
             // but, the original `$task` variable has also been updated
             $book = $form->getData();
+            $book -> setStock($book->getQuantity());
 
             // tell Doctrine you want to (eventually) save the Product (no queries yet)
             $entityManager->persist($book);
@@ -137,7 +137,11 @@ class BookController extends AbstractController
     {
         $entityManager = $doctrine->getManager();
         $book = $entityManager->getRepository(Book::class)->find($id);
-        if ($book -> getStatusid() -> getName() !== "Emprunté" && $book -> getStatusid() -> getName() !== "Réservé") {
+        if ($book -> getStock() == $book -> getQuantity()) {
+            $borrow = $entityManager->getRepository(Borrowing::class)->findBy(["book" => $id]);
+            foreach ($borrow as $delete) {
+                $entityManager->remove($delete);
+            }
             $entityManager->remove($book);
             $entityManager->flush();
         }
@@ -168,6 +172,7 @@ class BookController extends AbstractController
             // $form->getData() holds the submitted values
             // but, the original `$task` variable has also been updated
             $borrow = $form->getData();
+            if($book->getStock() > 0) {
             $borrow->setBook($book);
             $borrow->setBorrowingDate(date_create(date('Y-m-d')));
             $borrow->generateReturningDate(date_create(date('Y-m-d')));
@@ -176,6 +181,7 @@ class BookController extends AbstractController
             $entityManager->persist($borrow);
             $entityManager->flush();
             // return $this->redirectToRoute('books_listing');
+            }
         }
         $today = date_create(date('y-m-d'));
         return $this->renderForm('book/infos.html.twig', [

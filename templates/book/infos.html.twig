@@ -15,6 +15,10 @@
 <main class="example-wrapper">
     <h1 class='text-center text-decoration-underline my-5'>Description</h1>
 
+
+    <div class="container-fluid">
+    <div class="row">
+    <div class="col-6">
     <div class="card">
         <h5 class="card-header">{{ book.getTitle() }}, {{ book.getWriterid().getFirstname() }} {{ book.getWriterid().getLastname() }}</h5>
         <div class="card-body">
@@ -30,8 +34,10 @@
             {{form(form)}}
         </div>
     {% endif %}
-  
+
+
     {% for loan in book.getBorrowings() %}
+    {% if  loan.getReturningDate is same as(NULL) %}
     <table class='table table-striped text-center'>
         <tr>
             <th colspan="2">Informations sur l'emprunteur:</th>
@@ -45,7 +51,7 @@
             <td>{{loan.getBorrowingDate().format('Y-m-d')}}</td>
         </tr>
         <tr>
-            <td>Date de retour:</td>
+            <td>Date de retour effective:</td>
             <td>{{loan.getDueDate.format('Y-m-d')}}</td>
         </tr>
         <tr>
@@ -54,13 +60,51 @@
         {% else %}
             <td>Nombre de jours dépassés:</td>  
         {% endif %}  
-            <td>{{loan.getRemainingDays(loan.getBorrowingDate())}}</td>
+            <td>{{loan.getRemainingDays()}}</td>
         </tr>
     </table>
-    {% if loan.getReturningDate() == null %}
-    <a class='btn btn-dark' href='{{path('book_return', {id_book: book.getId(), id_borrow: loan.getId()})}}'>Livre rendu</a>
+     <a class='btn btn-dark' href='{{path('book_return', {id_book: book.getId(), id_borrow: loan.getId()})}}'>Livre rendu</a>
     {% endif %}
     {% endfor %}
+    </div>
+    <div class="col-6">
+    <table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Nom</th>
+      <th scope="col">Date d'emprunt</th>
+      <th scope="col">Date de retour</th>
+      <th scope="col">Retard</th>
+    </tr>
+  </thead>
+  <tbody>
+  
+  {% for loan in book.getBorrowings() %}
+    {% if  loan.getReturningDate() %}
+    <tr>
+      <td>{{loan.getUser().getFirstname()}} {{loan.getUser().getLastname()}}</td>
+      <td>{{loan.getBorrowingDate().format('Y-m-d')}}</td>
+      <td>{{loan.getReturningDate().format('Y-m-d')}}</td>
+      <td>{% if loan.getReturningDate() > loan.getDueDate() %}
+        X
+        {% endif %}
+      </td>
+    </tr>
+    {% elseif loan.getReturningDate() is empty %}
+    <tr>
+    <td colspan="4">Il n'y a pas d'historique pour ce livre. :( </td>
+    </tr>
+
+     {% endif %}
+    {% endfor %}
+
+  </tbody>
+</table>
+            </div>
+        </div>
+    </div>
+
+
     
 </main>
 {% endblock %}
