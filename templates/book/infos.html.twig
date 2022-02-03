@@ -14,69 +14,43 @@
 
 <main class="example-wrapper">
     <h1 class='text-center text-decoration-underline my-5'>Description</h1>
-    {# <ul>
-
-        <li>{{ book.getTitle() }}</li>
-        <li>{{ book.getWriterid().getFirstname() }} {{ book.getWriterid().getLastname() }}</li>
-        <li>{{ book.getPlot() }}</li>
-        <li>{{ book.getPublicationDate() }}</li>
-        <li>{{ book.getCategoryid().getName() }}</li>
-        <li>{{ book.getLanguageid().getName() }}</li>
-        <li>{{ book.getStatusid().getName() }}</li>
-        {% if book.getStatusid().getName() is same as("Disponible") %}
-        <li><button class="btn btn-danger" onclick="displayForm()">Emprunter</button></li>
-        <div id="borrowingForm" class="d-none">
-        {{form(form)}}
-        </div>
-        {% elseif book.getStatusid().getName() is same as("Emprunté") or book.getStatusid().getName() is same as("Réservé") %}
-        <li>{{ book.getUser().getFirstname() }} {{ book.getUser().getLastname() }} Possède le livre</li>
-        <li>Date de retour : {{ book.getReturningDate().format('Y-m-d') }}</li>
-        <a name="" id="" class="btn btn-primary" href="{{ path('book_return', {'id': book.getId()} )}}" role="button">RETOUR</a>
-        {% endif %}
-        <br>
-    </ul> #}
 
     <div class="card">
         <h5 class="card-header">{{ book.getTitle() }}, {{ book.getWriterid().getFirstname() }} {{ book.getWriterid().getLastname() }}</h5>
         <div class="card-body">
           <h5 class="card-title">{{ book.getPublicationDate() }}, {{ book.getCategoryid().getName() }}, {{ book.getLanguageid().getName() }}</h5>
           <p class="card-text">{{ book.getPlot() }}</p>
-          <p class="card-text text-center">{{ book.getStatusid().getName() }}</p>
+          <p class="card-text text-center">{{ book.getStock() }}</p>
         </div>
     </div>
 
-    {% if book.getStatusid().getName() is same as("Disponible") %}
+    {% if book.getStock() != 0 %}
         <button class="btn btn-danger" onclick="displayForm()">Emprunter</button>
         <div id="borrowingForm" class="d-none">
             {{form(form)}}
         </div>
-    {% elseif book.getStatusid().getName() is same as("Emprunté") or book.getStatusid().getName() is same as("Réservé") %}
+    {% else %}
+  
+    {% for one in book.getBorrowings() %}
     <table class='table table-striped text-center'>
         <tr>
             <th colspan="2">Informations sur l'emprunteur:</th>
         </tr>
         <tr>
             <td>Nom:</td>
-            <td>{{book.getUser().getFirstname()}} {{book.getUser().getLastname()}}</td>
+            <td>{{one.getUser().getFirstname()}} {{one.getUser().getLastname()}}</td>
         </tr>
         <tr>
             <td>Date d'emprunt:</td>
-            <td>{{book.getBorrowingDate().format('Y-m-d')}}</td>
+            <td>{{one.getBorrowingDate().format('Y-m-d')}}</td>
         </tr>
         <tr>
             <td>Date de retour:</td>
-            <td>{{book.getReturningDate().format('Y-m-d')}}</td>
+            <td>{{one.generateReturningDate().format('Y-m-d')}}</td>
         </tr>
-        <tr>
-            {% if book.getReturningDate() > today %}
-                <td>Nombre de jours avant retour :</td>
-                {% else %}
-                <td>Nombre de jours de retard :</td>
-            {% endif %}
-                <td>{{book.getRemainingDays()}}</td>
-
-        </tr>
+      
     </table>
+    {% endfor %}
     <a class='btn btn-dark' href='{{path('book_return', {id: book.getId()})}}'>Livre rendu</a>
     {% endif %}
 

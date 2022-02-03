@@ -58,14 +58,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $card_number;
 
     /**
-     * @ORM\OneToMany(targetEntity=Book::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Borrowing::class, mappedBy="user")
      */
-    private $books;
+    private $borrowings;
 
     public function __construct()
     {
-        $this->books = new ArrayCollection();
+        $this->borrowings = new ArrayCollection();
     }
+
 
 
     public function getId(): ?int
@@ -187,29 +188,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Book[]
+     * @return Collection|Borrowing[]
      */
-    public function getBooks(): Collection
+    public function getBorrowings(): Collection
     {
-        return $this->books;
+        return $this->borrowings;
     }
 
-    public function addBook(Book $book): self
+    public function addBorrowing(Borrowing $borrowing): self
     {
-        if (!$this->books->contains($book)) {
-            $this->books[] = $book;
-            $book->setUser($this);
+        if (!$this->borrowings->contains($borrowing)) {
+            $this->borrowings[] = $borrowing;
+            $borrowing->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeBook(Book $book): self
+    public function removeBorrowing(Borrowing $borrowing): self
     {
-        if ($this->books->removeElement($book)) {
+        if ($this->borrowings->removeElement($borrowing)) {
             // set the owning side to null (unless already changed)
-            if ($book->getUser() === $this) {
-                $book->setUser(null);
+            if ($borrowing->getUser() === $this) {
+                $borrowing->setUser(null);
             }
         }
 
