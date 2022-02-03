@@ -29,7 +29,7 @@
         <div id="borrowingForm" class="d-none">
             {{form(form)}}
         </div>
-    {% else %}
+    {% endif %}
   
     {% for loan in book.getBorrowings() %}
     <table class='table table-striped text-center'>
@@ -46,17 +46,21 @@
         </tr>
         <tr>
             <td>Date de retour:</td>
-            <td>{{loan.generateReturningDate().format('Y-m-d')}}</td>
+            <td>{{loan.getDueDate.format('Y-m-d')}}</td>
         </tr>
         <tr>
+        {% if loan.getDueDate > today %}
             <td>Nombre de jours restants:</td>
-            <td>{{loan.getRemainingDays()}}</td>
+        {% else %}
+            <td>Nombre de jours dépassés:</td>  
+        {% endif %}  
+            <td>{{loan.getRemainingDays(loan.getBorrowingDate())}}</td>
         </tr>
-      
     </table>
-    {% endfor %}
-    <a class='btn btn-dark' href='{{path('book_return', {id: book.getId()})}}'>Livre rendu</a>
+    {% if loan.getReturningDate() == null %}
+    <a class='btn btn-dark' href='{{path('book_return', {id_book: book.getId(), id_borrow: loan.getId()})}}'>Livre rendu</a>
     {% endif %}
-
+    {% endfor %}
+    
 </main>
 {% endblock %}
