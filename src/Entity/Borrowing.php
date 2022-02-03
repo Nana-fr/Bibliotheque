@@ -37,6 +37,11 @@ class Borrowing
      */
     private $returningDate;
 
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $dueDate;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -90,15 +95,27 @@ class Borrowing
         return $this;
     }
     
-    public function generateReturningDate(): \DateTimeInterface {
-        $date = $this->getBorrowingDate();
-        $returning_date = $date->add(new \DateInterval('P14D'));
-        return $returning_date;   
+    public function generateReturningDate(\DateTimeInterface $date): self {
+        $returning_date = $date ->add(new \DateInterval('P14D'));
+        $this->dueDate = $returning_date;
+        return $this;
     }
 
     public function getRemainingDays(\DateTimeInterface $date):string {
         $result = date_diff($date, date_create(date('Y-m-d')));
         $remainingDays = $result->format('%d');
         return $remainingDays;
+    }
+
+    public function getDueDate(): ?\DateTimeInterface
+    {
+        return $this->dueDate;
+    }
+
+    public function setDueDate(\DateTimeInterface $dueDate): self
+    {
+        $this->dueDate = $dueDate;
+
+        return $this;
     }
 }

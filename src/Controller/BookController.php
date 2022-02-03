@@ -170,7 +170,8 @@ class BookController extends AbstractController
             $borrow = $form->getData();
             $borrow->setBook($book);
             $borrow->setBorrowingDate(date_create(date('Y-m-d')));
-            $book->updateStock();
+            $borrow->generateReturningDate(date_create(date('Y-m-d')));
+            $book->updateStock(-1);
             // actually executes the queries (i.e. the INSERT query)
             $entityManager->persist($borrow);
             $entityManager->flush();
@@ -185,16 +186,16 @@ class BookController extends AbstractController
         ]);
     }
        
-    #[Route('/book/return/{id}', name: 'book_return')]
-    public function returnBook(ManagerRegistry $doctrine, int $id): Response
+    #[Route('/book/return/{id_book}/{id_borrow}', name: 'book_return')]
+    public function returnBook(ManagerRegistry $doctrine, int $id_book, int $id_borrow): Response
     {
         $entityManager = $doctrine->getManager();
-        $book = $entityManager->getRepository(Book::class)->find($id);
-        $status = $entityManager->getRepository(Status::class)->find(array('id'=> 1));
-        $book->setStatusid($status);
-        $book->setBorrowingDate(null);
-        $book->setReturningDate(null);
-        $book->setUser(null);
+        $borrow = $entityManager->getRepository(Borrowing::class)->find($id_borrow);
+        if(!$borrow->getReturningDate()){
+            $borrow->setReturningDate(date_create(date('Y-m-d')));
+            $book = $entityManager->getRepository(Book::class)->find($id_book);
+            $book->updateStock(+1);
+        }
         $entityManager->flush();
         return $this->redirectToRoute('books_listing');
     }
