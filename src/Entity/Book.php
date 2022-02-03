@@ -181,18 +181,6 @@ class Book
         return $this;
     }
 
-    public function generateReturningDate(\DateTimeInterface $date): self {
-        $returning_date = $date->add(new \DateInterval('P14D'));
-        $this->returningDate = $returning_date;
-        return $this;
-    }
-
-    public function getRemainingDays():string {
-        $result = date_diff($this->getReturningDate(), date_create(date('y-m-d')));
-        $remainingDays = $result->format('%d');
-        return $remainingDays;
-    }
-
     public function getStock(): ?int
     {
         return $this->stock;
@@ -269,6 +257,13 @@ class Book
             }
         }
 
+        return $this;
+    }
+
+    public function updateStock()
+    {
+        $realStock = $this->getStock()-1;
+        $this->stock = $realStock;
         return $this;
     }
 

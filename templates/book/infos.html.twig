@@ -31,22 +31,26 @@
         </div>
     {% else %}
   
-    {% for one in book.getBorrowings() %}
+    {% for loan in book.getBorrowings() %}
     <table class='table table-striped text-center'>
         <tr>
             <th colspan="2">Informations sur l'emprunteur:</th>
         </tr>
         <tr>
             <td>Nom:</td>
-            <td>{{one.getUser().getFirstname()}} {{one.getUser().getLastname()}}</td>
+            <td>{{loan.getUser().getFirstname()}} {{loan.getUser().getLastname()}}</td>
         </tr>
         <tr>
             <td>Date d'emprunt:</td>
-            <td>{{one.getBorrowingDate().format('Y-m-d')}}</td>
+            <td>{{loan.getBorrowingDate().format('Y-m-d')}}</td>
         </tr>
         <tr>
             <td>Date de retour:</td>
-            <td>{{one.generateReturningDate().format('Y-m-d')}}</td>
+            <td>{{loan.generateReturningDate().format('Y-m-d')}}</td>
+        </tr>
+        <tr>
+            <td>Nombre de jours restants:</td>
+            <td>{{loan.getRemainingDays()}}</td>
         </tr>
       
     </table>

@@ -7,13 +7,13 @@ use App\Entity\Writer;
 use App\Entity\Category;
 use App\Entity\Language;
 use App\Entity\Status;
+use App\Entity\Borrowing;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -150,8 +150,9 @@ class BookController extends AbstractController
     {
         $entityManager = $doctrine->getManager();
         $book = $entityManager->getRepository(Book::class)->find($id);
-         
-        $form = $this->createFormBuilder($book)
+        $borrow = new Borrowing;
+
+        $form = $this->createFormBuilder($borrow)
         ->add('user', EntityType::class, [
             // looks for choices from this entity
             'class' => User::class,
@@ -166,12 +167,12 @@ class BookController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // $form->getData() holds the submitted values
             // but, the original `$task` variable has also been updated
-            $book = $form->getData();
-            $status = $entityManager->getRepository(Status::class)->find(array('id'=> 2));
-            $book->setStatusid($status);
-            $book->setBorrowingDate(date_create(date('Y-m-d')));
-            $book->generateReturningDate(date_create(date('Y-m-d')));
+            $borrow = $form->getData();
+            $borrow->setBook($book);
+            $borrow->setBorrowingDate(date_create(date('Y-m-d')));
+            $book->updateStock();
             // actually executes the queries (i.e. the INSERT query)
+            $entityManager->persist($borrow);
             $entityManager->flush();
             // return $this->redirectToRoute('books_listing');
         }
@@ -180,6 +181,7 @@ class BookController extends AbstractController
             'book' => $book,
             'form' => $form,
             'today' => $today,
+            'borrow' => $borrow,
         ]);
     }
        
