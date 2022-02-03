@@ -260,11 +260,12 @@ class Book
         return $this;
     }
 
-    public function updateStock()
+    public function updateStock(int $value)
     {
-        $realStock = $this->getStock()-1;
+        $realStock = $this->getStock() + $value;
         $this->stock = $realStock;
         return $this;
     }
+    
 
 }
