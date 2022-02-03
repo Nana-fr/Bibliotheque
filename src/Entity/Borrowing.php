@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\BorrowingRepository;
-use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -92,14 +91,13 @@ class Borrowing
     }
     
     public function generateReturningDate(): \DateTimeInterface {
-        $returning_date = $this->getBorrowingDate()->add(new \DateInterval('P14D'));
-        return $returning_date;
+        $date = $this->getBorrowingDate();
+        $returning_date = $date->add(new \DateInterval('P14D'));
+        return $returning_date;   
     }
 
-    public function getRemainingDays():string {
-        // dump($this->generateReturningDate());
-        // dump($this->getBorrowingDate());
-        $result = date_diff(date_create($this->generateReturningDate()->format('Y-m-d')), date_create(date('Y-m-d')));
+    public function getRemainingDays(\DateTimeInterface $date):string {
+        $result = date_diff($date, date_create(date('Y-m-d')));
         $remainingDays = $result->format('%d');
         return $remainingDays;
     }
