@@ -8,7 +8,7 @@ h1 {
 }
 
 header {
-    height: 15vh;
+    height: 18vh;
 }
 
 img {
@@ -19,6 +19,7 @@ img {
 footer {
     height: 8vh;
 }
+
 *{
     font-family: 'Quintessential', cursive;
     color:#412728;
