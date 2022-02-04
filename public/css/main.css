@@ -1,29 +1,39 @@
-.plot {
-    text-overflow:'...';
-    overflow: hidden;
-    white-space: nowrap;
-}
-h1 {
-    margin: 0rem;
-}
-
-header {
-    height: 18vh;
-}
-
-img {
-    width: 120px;
-    height: 150px;
-}
-
-footer {
-    height: 8vh;
-}
-
 *{
     font-family: 'Quintessential', cursive;
     color:#412728;
 }
 body{
     background-color:#F2E7BF ;
+}
+
+header {
+    background-image: url("../../image/header.jpg");
+    background-size: 100% 100%;
+    width: 100vw;
+    height: 25vh;
+}
+.navbar {
+    background: linear-gradient(90deg,#b87c4c, #faf1ce 50%,#b87c4c)!important;
+    border-top: 1px solid #412728;
+    border-bottom: 1px solid #412728;
+}
+.nav-item {
+    margin: 0rem 4rem;
+   
+}
+.nav-link {
+     font-size: 1.3rem;
+    color: #412728 !important;
+}
+
+#logo {
+    width: 120px;
+}
+
+h1 {
+    margin: 0rem;
+}
+
+footer {
+    height: 8vh;
 }
