@@ -184,11 +184,21 @@ class BookController extends AbstractController
             }
         }
         $today = date_create(date('y-m-d'));
+        $loans = [];
+        $histories = [];
+        foreach ($book->getBorrowings() as $value ) {
+            if ($value->getReturningDate() === null) {
+                $loans[]= $value;
+            } else {
+                $histories[]= $value;
+            }
+        }
         return $this->renderForm('book/infos.html.twig', [
             'book' => $book,
             'form' => $form,
             'today' => $today,
-            'borrow' => $borrow,
+            'loans' => $loans,
+            'histories' => $histories,
         ]);
     }
        
