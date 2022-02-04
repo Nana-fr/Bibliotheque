@@ -16,12 +16,25 @@ footer {
 }
 *{
     font-family: 'Quintessential', cursive;
-    /* color:#412728; */
+    color:#412728;
 }
 body{
     background-color:#F2E7BF ;
 }
+.btn {
+    color: white;
+    background-color: #b87c4c;
+    border-color: #412728;
+}
 
-a {
-    margin: 0rem 2rem;
+input {
+    background-color: white;
+}
+
+main {
+    min-height: 65vh;
+}
+
+.btn2 {
+    background-color:#412728;
 }

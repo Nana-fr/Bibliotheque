@@ -282,6 +282,14 @@ class Book
 
         return $this;
     }
+
+
+    public function truncatePlot(): string
+    {
+        $value = $this->getPlot();
+        $ellips = mb_substr($value,0,450);
+        return $ellips.'...';
+    }
     
 
 }

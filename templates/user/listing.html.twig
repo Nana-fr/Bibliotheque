@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="\Bibliotheque\public\css\listingBook.css">
+{% endblock %}
+
 {% block title %}Hello UserController!{% endblock %}
 
 {% block body %}
@@ -10,11 +14,11 @@
 
 <div class="example-wrapper">
 
-    <h1 class='text-center my-5'>Liste des utilisateurs!🎈😎</h1>
+    <h1 class='text-center mt-5 text-decoration-underline'>Liste des utilisateurs</h1>
 
-    <a class="btn btn-info my-5" href="{{ path('user_add') }}">Ajouter un utilisateur</a>
+    <a class="btn my-5" href="{{ path('user_add') }}">Ajouter un utilisateur</a>
 
-    <table class="table">
+    <table class="table bg-light text-center mb-5">
         <thead class="thead-dark">
           <tr>
             <th>Prénom</th>
@@ -28,7 +32,7 @@
             {% if user.getRoles is same as(["ROLE_USER"]) %}
             <td>{{ user.getFirstname() }}</td>
             <td>{{ user.getLastname() }}</td>
-            <td><a href="{{ path('user_infos', {'id': user.getId()} )}}" class='btn btn-success'>Plus d'infos</a></td>
+            <td><a href="{{ path('user_infos', {'id': user.getId()} )}}" class='btn'>Plus d'infos</a></td>
             {% endif %}
         </tr> 
         {% endfor %}

@@ -2,6 +2,7 @@
 
 {% block stylesheets %}
     <link rel='stylesheet' type="text/css" href='https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css'>
+    <link rel="stylesheet" type="text/css" href="\Bibliotheque\public\css\listingBook.css">
 {% endblock %}
 
 {% block javascripts %}
@@ -45,7 +46,7 @@
 
     <div class='row'>
         <div class='col-12 col-lg-3 px-5'>
-            <a class="btn btn-info my-5" href="{{ path('book_add') }}">Ajouter un livre</a>
+            <a class="btn my-5" href="{{ path('book_add') }}">Ajouter un livre</a>
             {{form(formFilter)}}
         </div>
         <div class='col-12 col-lg-9'>
@@ -66,16 +67,16 @@
                                     <img src="../../image/black.jpg" class="rounded-start" alt="book">
                                 </div>
                                 <div class="col-md-9 my-3">
-                                    <p class="card-text">{{book.getPlot()}}</p>
+                                    <p class="card-text">{{book.truncatePlot()}}</p>
                                 </div>
                             </div>
-                            <div class="text-end border-top">Nombre d'exemplaire(s) disponible(s) {{ book.getStock() }}/{{ book.getQuantity() }}</div>
+                            <div class="text-end border-top py-1">Nombre d'exemplaire(s) disponible(s) {{ book.getStock() }}/{{ book.getQuantity() }}</div>
                         </td>
                         <td>
                             <div class='d-flex flex-column justify-content-between align-items-center'>
-                                <a class="btn btn-success mb-2" href="{{ path('book_infos', {'id': book.getId()} )}}">Plus d'infos</a>
+                                <a class="btn mb-2" href="{{ path('book_infos', {'id': book.getId()} )}}">Plus d'infos</a>
                                 {% if book.getStock() != 0 %}
-                                <a class="btn btn-danger mt-2" href="{{ path('book_delete', {'id': book.getId()} )}}">Supprimer</a>
+                                <a class="btn btn2 mt-2" href="{{ path('book_delete', {'id': book.getId()} )}}"><i class="far fa-trash-alt"></i>Supprimer</a>
                                 {% endif %}
                             </div> 
                         </td>   
