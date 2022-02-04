@@ -19,3 +19,10 @@ img {
 footer {
     height: 8vh;
 }
+*{
+    font-family: 'Quintessential', cursive;
+    color:#412728;
+}
+body{
+    background-color:#F2E7BF ;
+}
