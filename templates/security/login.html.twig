@@ -8,7 +8,8 @@
 
 {% block body %}
 <main class="container">
-    <h1 class="h3 pt-5 font-weight-normal text-center">Please sign in</h1>
+    <h1 class="h3 pt-5 font-weight-normal text-center">Please sign in <i class="fas fa-scroll"></i>
+        </h1>
 <form method="post" class="w-50 mx-auto">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>

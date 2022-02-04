@@ -100,6 +100,11 @@ class Book
      */
     private $availability;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $cover;
+
     public function __construct()
     {
         $this->status = new ArrayCollection();
@@ -289,6 +294,18 @@ class Book
         $value = $this->getPlot();
         $ellips = mb_substr($value,0,450);
         return $ellips.'...';
+    }
+
+    public function getCover(): ?string
+    {
+        return $this->cover;
+    }
+
+    public function setCover(string $cover): self
+    {
+        $this->cover = $cover;
+
+        return $this;
     }
     
 

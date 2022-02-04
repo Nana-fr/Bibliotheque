@@ -1,0 +1,23 @@
+#titreUtilisateur, #titreDescription{
+    text-decoration: underline;
+    font-weight: bolder;
+}
+#tableUser{
+    border-color: black;
+}
+#btnUser{
+    background-color: black;
+    color: #F2E7BF;
+}
+#btnUser:hover{
+    background-color: #F2E7BF;
+    color: black;
+    border-color: black;
+}
+.titleTable{
+    font-size: large;
+}
+.subtitleUser{
+    text-decoration: underline;
+    font-weight: bolder;
+}
