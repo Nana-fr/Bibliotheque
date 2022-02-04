@@ -19,6 +19,26 @@ class BookRepository extends ServiceEntityRepository
         parent::__construct($registry, Book::class);
     }
 
+  /**
+ * fetches Books that are more than 0 in stock
+ * 
+ * @return array
+ */
+public function findBooksAvailables()
+{
+  $em = $this->getEntityManager();
+  $qb = $em->createQueryBuilder();
+
+  $q  = $qb->select(array('b'))
+           ->from('YourBookBundle:Book', 'b')
+           ->where(
+             $qb->expr()->gt('b.stock', 0)
+           )
+           ->getQuery();
+
+  return $q->getResult();
+}
+
     // /**
     //  * @return Book[] Returns an array of Book objects
     //  */

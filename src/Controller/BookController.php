@@ -27,35 +27,35 @@ class BookController extends AbstractController
         $data = [];
         $formFilter = $this->createFormBuilder()
         ->add('writerid', EntityType::class,[
-            'label' => 'Writer :',
+            'label' => 'Ecrivain :',
             'class' => Writer::class,
             'required' => false,
             'choice_label' => function ($writer) {
                 return $writer->getFirstname() . ' ' . $writer->getLastname();
             },'attr' => ['class' => 'form-control my-2']])
         ->add('languageid', EntityType::class,[
-            'label' => 'Language :',
+            'label' => 'Langage :',
             'class' => Language::class,
             'required' => false,
             'choice_label' => 'name',
             'attr' => ['class' => 'form-control my-2']])
         ->add('categoryid', EntityType::class,[
-            'label' => 'Category :',
+            'label' => 'Catégorie :',
             'required' => false,
             'class' => Category::class,
             'choice_label' => 'name',
             'attr' => ['class' => 'form-control my-2']])
         ->add('availability', ChoiceType::class,[
-            'label' => 'Availability :',
+            'label' => 'Disponibilité :',
             'required' => false,
             'choices'  => [
                 'Disponible' => true,
                 'Emprunté'     => false,
-
+                'Indisponible' => 'out',
             ],
             'attr' => ['class' => 'form-control my-2']
         ])
-        ->add('save', SubmitType::class, ['label' => 'Filter','attr' => ['class' => 'btn btn-dark mt-3']])
+        ->add('save', SubmitType::class, ['label' => 'Filtrer','attr' => ['class' => 'btn btn-dark mt-3']])
         ->getForm();
 
         $formFilter->handleRequest($request);
