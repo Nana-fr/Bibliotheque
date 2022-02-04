@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\BorrowingRepository;
-use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

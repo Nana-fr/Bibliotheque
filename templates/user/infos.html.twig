@@ -19,24 +19,33 @@
 		}
 	</style>
 
-	<div class="example-wrapper">
-		<h1>Description</h1>
-		<li>{{ user.getFirstname() }}</li>
-		<li>{{ user.getLastname() }}</li>
-		<li>{{ user.getCardNumber() }}</li>
-        {% for book in user.getBorrowings() %}
-			<li>{{ book.getBook().getTitle() }}</li>
-        {% endfor %}
-        
-        {# {% if user.getBooks() %}
-		    {% for book in user.getBooks() %}
-				<li>{{ book.getTitle() }}</li>
-            {% endfor %}
-        {% else  %}
-            <li>Pas de livre emprunté!</li>
-		{% endif %}
-             #}
-		
+	<main class="example-wrapper">
 
-	</div>
+		<h1 class='text-center my-5'>Description</h1>
+
+			<table class='table table-striped text-center'> 
+				<thead>
+					<tr>
+						<th>Prénom</th>
+						<th>Nom</th>
+						<th>Numéro de carte</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{{user.getFirstname()}}</td>
+						<td>{{user.getLastname()}}</td>
+						<td>{{user.getCardNumber()}}</td>
+					</tr>
+				</tbody>
+				<tr><th colspan="3">Liste des livres empruntés:</th></tr>
+				{% if user.getBorrowings() %}
+					{% for book in user.getBorrowings() %}
+					<tr><td colspan="3">{{book.getBook().getTitle()}} de {{book.getBook().getWriterid().getFirstname}} {{book.getBook().getWriterid().getLastname}}</td></tr>
+					{% endfor %}
+				{% else %}
+					<tr><td colspan="3">Actuellement aucun emprunt.</td></tr>
+				{% endif %}
+			</table>
+		</main>
 {% endblock %}

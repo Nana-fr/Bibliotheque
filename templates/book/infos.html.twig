@@ -12,99 +12,99 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
-<main class="example-wrapper">
+<main class="container-fluid">
+  
     <h1 class='text-center text-decoration-underline my-5'>Description</h1>
 
+    <div class="container">
+      <div class="row">
+        <div class="col-7">
+          <div class="card">
+              <h5 class="card-header">{{ book.getTitle() }}, {{ book.getWriterid().getFirstname() }} {{ book.getWriterid().getLastname() }}</h5>
+              <div class="card-body">
+                <h5 class="card-title">{{ book.getPublicationDate() }}, {{ book.getCategoryid().getName() }}, {{ book.getLanguageid().getName() }}</h5>
+                <p class="card-text">{{ book.getPlot() }}</p>
+                <p class="card-text text-center">Nombre d'exemplaire(s) disponible(s): {{ book.getStock() }}/{{ book.getQuantity() }}</p>
+              </div>
+          </div>
 
-    <div class="container-fluid">
-    <div class="row">
-    <div class="col-6">
-    <div class="card">
-        <h5 class="card-header">{{ book.getTitle() }}, {{ book.getWriterid().getFirstname() }} {{ book.getWriterid().getLastname() }}</h5>
-        <div class="card-body">
-          <h5 class="card-title">{{ book.getPublicationDate() }}, {{ book.getCategoryid().getName() }}, {{ book.getLanguageid().getName() }}</h5>
-          <p class="card-text">{{ book.getPlot() }}</p>
-          <p class="card-text text-center">{{ book.getStock() }}</p>
+          {% if book.getStock() != 0 %}
+              <button class="btn btn-danger" onclick="displayForm()">Emprunter</button>
+              <div id="borrowingForm" class="d-none">
+                  {{form(form)}}
+              </div>
+          {% endif %}
+
+          <h3 class='my-4'>Informations sur les prêts en cours:</h3>
+          
+          <table class='table table-striped text-center'>
+            <thead>
+              <tr>
+                  <th>Nom</th>
+                  <th>Date d'emprunt</th>
+                  <th>Date de retour effective</th>
+                  <th>Nombre de jours restant</th>
+                  <th></th>
+              </tr>
+            </thead>
+            <tbody>
+            {% if  loans %} 
+              {% for loan in loans %}
+              <tr>
+                <td>{{loan.getUser().getFirstname()}} {{loan.getUser().getLastname()}}</td>
+                <td>{{loan.getBorrowingDate().format('Y-m-d')}}</td>
+                <td>{{loan.getDueDate.format('Y-m-d')}}</td>
+                {% if loan.getDueDate > today %}
+                    <td>{{loan.getRemainingDays()}}</td>
+                {% else %}
+                    <td>- {{loan.getRemainingDays()}}</td> 
+                {% endif %} 
+                <td>
+                  <a class='btn btn-dark' href='{{path('book_return', {id_book: book.getId(), id_borrow: loan.getId()})}}'>Livre rendu</a>
+                </td>
+              </tr> 
+              {% endfor %}   
+          {% else %}
+          <tr><td colspan="4">Il n'y a pas d'emprunt en cours</td></tr>
+          {% endif %}
+            </tbody>
+          </table>
         </div>
-    </div>
 
-    {% if book.getStock() != 0 %}
-        <button class="btn btn-danger" onclick="displayForm()">Emprunter</button>
-        <div id="borrowingForm" class="d-none">
-            {{form(form)}}
+        <div class="col-5">
+          <h3>Historique des prêts</h3>
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Nom</th>
+              <th scope="col">Date d'emprunt</th>
+              <th scope="col">Date de retour</th>
+              <th scope="col">Retard</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% if histories %} 
+            {% for history in histories %}
+            <tr>
+              <td>{{history.getUser().getFirstname()}} {{history.getUser().getLastname()}}</td>
+              <td>{{history.getBorrowingDate().format('Y-m-d')}}</td>
+              <td>{{history.getReturningDate().format('Y-m-d')}}</td>
+              <td>
+                {% if history.getReturningDate() > history.getDueDate() %}
+                  X
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}   
+          {% else %}
+            <tr>
+              <td colspan="4">Il n'y a pas d'historique pour ce livre. :( </td>
+            </tr>
+          {% endif %}
+          </tbody>
+        </table>
         </div>
-    {% endif %}
-
-
-    {% for loan in book.getBorrowings() %}
-    {% if  loan.getReturningDate is same as(NULL) %}
-    <table class='table table-striped text-center'>
-        <tr>
-            <th colspan="2">Informations sur l'emprunteur:</th>
-        </tr>
-        <tr>
-            <td>Nom:</td>
-            <td>{{loan.getUser().getFirstname()}} {{loan.getUser().getLastname()}}</td>
-        </tr>
-        <tr>
-            <td>Date d'emprunt:</td>
-            <td>{{loan.getBorrowingDate().format('Y-m-d')}}</td>
-        </tr>
-        <tr>
-            <td>Date de retour effective:</td>
-            <td>{{loan.getDueDate.format('Y-m-d')}}</td>
-        </tr>
-        <tr>
-        {% if loan.getDueDate > today %}
-            <td>Nombre de jours restants:</td>
-        {% else %}
-            <td>Nombre de jours dépassés:</td>  
-        {% endif %}  
-            <td>{{loan.getRemainingDays()}}</td>
-        </tr>
-    </table>
-     <a class='btn btn-dark' href='{{path('book_return', {id_book: book.getId(), id_borrow: loan.getId()})}}'>Livre rendu</a>
-    {% endif %}
-    {% endfor %}
-    </div>
-    <div class="col-6">
-    <table class="table">
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Nom</th>
-      <th scope="col">Date d'emprunt</th>
-      <th scope="col">Date de retour</th>
-      <th scope="col">Retard</th>
-    </tr>
-  </thead>
-  <tbody>
-  
-  {% for loan in book.getBorrowings() %}
-    {% if  loan.getReturningDate() %}
-    <tr>
-      <td>{{loan.getUser().getFirstname()}} {{loan.getUser().getLastname()}}</td>
-      <td>{{loan.getBorrowingDate().format('Y-m-d')}}</td>
-      <td>{{loan.getReturningDate().format('Y-m-d')}}</td>
-      <td>{% if loan.getReturningDate() > loan.getDueDate() %}
-        X
-        {% endif %}
-      </td>
-    </tr>
-    {% elseif loan.getReturningDate() is empty %}
-    <tr>
-    <td colspan="4">Il n'y a pas d'historique pour ce livre. :( </td>
-    </tr>
-
-     {% endif %}
-    {% endfor %}
-
-  </tbody>
-</table>
-            </div>
-        </div>
-    </div>
-
-
-    
+      </div>
+    </div>  
 </main>
 {% endblock %}

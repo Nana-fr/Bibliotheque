@@ -96,7 +96,7 @@ class Book
     private $borrowings;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="string")
      */
     private $availability;
 
@@ -247,12 +247,12 @@ class Book
         return $this;
     }
 
-    public function getAvailability(): ?bool
+    public function getAvailability(): ?string
     {
         return $this->availability;
     }
 
-    public function setAvailability(bool $availability): self
+    public function setAvailability(string $availability): self
     {
         $this->availability = $availability;
 
