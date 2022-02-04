@@ -2,20 +2,23 @@ main {
     min-height: 65vh;
 }
 
-.btn {
+.btn, .paginate_button {
     color: white;
     border-color: #412728;
     background: linear-gradient(45deg,#b87c4c, #F2E7BF);
 
 }
-.btn2 {
-    background: linear-gradient(45deg, #412728,#b87c4c);
+.paginate_button:hover {
+    background: linear-gradient(45deg,#b87c4c, #F2E7BF)!important;
+}
+.btn2, .paginate_button.current {
+    background: linear-gradient(45deg, #412728,#b87c4c)!important;
 }
 
 .form {
     background-color: #faf5e0;
     border: 1px solid #412728;
-    padding: 0.5rem;
+    padding: 0.8rem;
 }
 
 td {
