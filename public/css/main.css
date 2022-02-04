@@ -36,4 +36,6 @@ h1 {
 
 footer {
     height: 8vh;
+    border-top: 1px solid #412728;
+    background: linear-gradient(90deg,#b87c4c, #faf1ce 50%,#b87c4c);
 }

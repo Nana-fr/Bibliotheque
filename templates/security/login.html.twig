@@ -8,27 +8,27 @@
 
 {% block body %}
 <main class="container">
-    <h1 class="h3 pt-5 font-weight-normal text-center">Please sign in <i class="fas fa-scroll"></i>
-        </h1>
-<form method="post" class="w-50 mx-auto">
+
+    <h1 class="h3 py-5 font-weight-normal text-center text-decoration-underline">Veuillez vous authentifier: <i class="fas fa-scroll"></i><i class="fas fa-feather-alt fa-sm"></i></h1>
+    
+<form method="post" class="w-25 mx-auto form text-center">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
 
     {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+        <div class="my-3">
+            Vous êtes connectés en tant que {{ app.user.username }}, <a href="{{ path('app_logout') }}">Déconnexion</a>
         </div>
     {% endif %}
 
-    <label for="inputUsername">Username</label>
+    <label for="inputUsername">Identifiant:</label>
     <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" autocomplete="username" required autofocus>
-    <label for="inputPassword">Password</label>
+    <label for="inputPassword">Mot de passe:</label>
     <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
 
     <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
+           value="{{ csrf_token('authenticate') }}">
 
     {#
         Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
@@ -42,7 +42,7 @@
     #}
 
     <button class="btn mt-3" type="submit">
-        Sign in
+        Se connecter
     </button>
 </form>
 </main>

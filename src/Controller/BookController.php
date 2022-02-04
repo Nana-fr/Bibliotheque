@@ -49,13 +49,13 @@ class BookController extends AbstractController
             'label' => 'Disponibilité :',
             'required' => false,
             'choices'  => [
-                'Disponible' => true,
-                'Emprunté'     => false,
+                'Disponible' => 'Disponible',
+                'Emprunté'     => 'Emprunté',
                 'Indisponible' => 'out',
             ],
             'attr' => ['class' => 'form-control my-2']
         ])
-        ->add('save', SubmitType::class, ['label' => 'Filtrer','attr' => ['class' => 'btn btn-dark mt-3']])
+        ->add('save', SubmitType::class, ['label' => 'Filtrer','attr' => ['class' => 'btn mt-3']])
         ->getForm();
 
         $formFilter->handleRequest($request);
@@ -63,6 +63,11 @@ class BookController extends AbstractController
     if ($formFilter->isSubmitted() && $formFilter->isValid()) {
         
         $data = $formFilter->getData();
+        if ($data['availability']==='Disponible') {
+            $data['availability'] = [0=>'full', 1=>'middle'];
+        } else if ($data['availability']==='Emprunté') {
+            $data['availability'] = [0=>'out', 1=>'middle'];
+        }
         $data = array_filter($data);
     }
 
