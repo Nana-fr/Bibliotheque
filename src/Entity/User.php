@@ -62,11 +62,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $borrowings;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $street;
+
+    /**
+     * @ORM\Column(type="string", length=70)
+     */
+    private $city;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $postal_code;
+
+    /**
+     * @ORM\Column(type="string", length=30)
+     */
+    private $phone_number;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $registration_date;
+
     public function __construct()
     {
         $this->borrowings = new ArrayCollection();
     }
-
 
 
     public function getId(): ?int
@@ -213,6 +237,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $borrowing->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStreet(): ?string
+    {
+        return $this->street;
+    }
+
+    public function setStreet(string $street): self
+    {
+        $this->street = $street;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(string $city): self
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function getPostalCode(): ?int
+    {
+        return $this->postal_code;
+    }
+
+    public function setPostalCode(int $postal_code): self
+    {
+        $this->postal_code = $postal_code;
+
+        return $this;
+    }
+
+    public function getPhoneNumber(): ?string
+    {
+        return $this->phone_number;
+    }
+
+    public function setPhoneNumber(string $phone_number): self
+    {
+        $this->phone_number = $phone_number;
+
+        return $this;
+    }
+
+    public function getRegistrationDate(): ?\DateTimeInterface
+    {
+        return $this->registration_date;
+    }
+
+    public function setRegistrationDate(?\DateTimeInterface $registration_date): self
+    {
+        $this->registration_date = $registration_date;
 
         return $this;
     }

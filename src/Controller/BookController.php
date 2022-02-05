@@ -85,7 +85,7 @@ class BookController extends AbstractController
         $book = new Book();
 
         $form = $this->createFormBuilder($book)
-            ->add('title', TextType::class, ['attr' => ['class' => 'form-control']])
+            ->add('title', TextType::class, ['label' => 'Titre :', 'attr' => ['class' => 'form-control  text-center']])
             ->add('writerid', EntityType::class, [
                 // looks for choices from this entity
                 'class' => Writer::class,
@@ -93,26 +93,29 @@ class BookController extends AbstractController
                 'choice_label' => function($writer) {
                     return $writer -> getFirstname(). ' ' . $writer -> getLastname();
                 },
-                'attr' => ['class' => 'form-control',
+                'label' => 'Auteur :',
+                'attr' => ['class' => 'form-control text-center',
                 ]])
-            ->add('plot', TextareaType::class, ['attr' => ['class' => 'form-control']])
+            ->add('plot', TextareaType::class, ['label' => 'Description :', 'attr' => ['class' => 'form-control  text-center']])
             ->add('languageid', EntityType::class, [
                 // looks for choices from this entity
                 'class' => Language::class,
                 // uses the User.username property as the visible option string
                 'choice_label' => 'name',
-                'attr' => ['class' => 'form-control',
+                'label' => 'Langue :',
+                'attr' => ['class' => 'form-control  text-center',
             ]])
-            ->add('publicationDate', TextType::class, ['attr' => ['class' => 'form-control']])
+            ->add('publicationDate', TextType::class, ['label' => 'Date de parution :', 'attr' => ['class' => 'form-control  text-center']])
             ->add('categoryid', EntityType::class, [
                 // looks for choices from this entity
                 'class' => Category::class,
                 // uses the User.username property as the visible option string
                 'choice_label' => 'name',
-                'attr' => ['class' => 'form-control',
+                'label' => 'Catégorie :',
+                'attr' => ['class' => 'form-control  text-center',
                 ]])
-            ->add('quantity', IntegerType::class, ['attr' => ['class' => 'form-control']])
-            ->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-primary']])
+            ->add('quantity', IntegerType::class, ['label' => 'Quantité :', 'attr' => ['class' => 'form-control  text-center']])
+            ->add('save', SubmitType::class, ['label' => 'Enregistrer', 'attr' => ['class' => 'btn btn2 my-5']])
             ->getForm();
 
             $form->handleRequest($request);

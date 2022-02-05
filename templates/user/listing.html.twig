@@ -2,6 +2,11 @@
 
 {% block title %}Hello UserController!
 {% endblock %}
+	{% block stylesheets %}
+		<link rel="stylesheet" type="text/css" href="{{asset('\css/user.css')}}">
+	{% endblock %}
+
+
 
 {% block body %}
 
@@ -15,6 +20,7 @@
 						<tr>
 							<th class="text-center titleTable">Prénom</th>
 							<th class="text-center titleTable">Nom</th>
+							<th class="text-center titleTable">Numéro de carte</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -24,6 +30,7 @@
 								{% if user.getRoles is same as(["ROLE_USER"]) %}
 									<td class="text-center">{{ user.getFirstname() }}</td>
 									<td class="text-center">{{ user.getLastname() }}</td>
+									<td class="text-center">{{ user.getCardNumber() }}</td>
 									<td class="text-center">
 										<a href="{{ path('user_infos', {'id': user.getId()} )}}" class='btn' id='btnUser'>Plus d'infos</a>
 									</td>
