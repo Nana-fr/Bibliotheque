@@ -7,6 +7,7 @@ use App\Entity\Writer;
 use App\Entity\Category;
 use App\Entity\Language;
 use App\Entity\Borrowing;
+
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +18,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
 
 class BookController extends AbstractController
 {
@@ -78,18 +85,15 @@ class BookController extends AbstractController
         ]);
     }
     #[Route('/book/add', name: 'book_add')]
-    public function addBook(Request $request, ManagerRegistry $doctrine): Response
+    public function addBook(Request $request, ManagerRegistry $doctrine, SluggerInterface $slugger): Response
     {
         $entityManager = $doctrine->getManager();
-        // creates a book object and initializes some data for this example
         $book = new Book();
 
         $form = $this->createFormBuilder($book)
             ->add('title', TextType::class, ['label' => 'Titre :', 'attr' => ['class' => 'form-control  text-center']])
             ->add('writerid', EntityType::class, [
-                // looks for choices from this entity
                 'class' => Writer::class,
-                // uses the User.username property as the visible option string
                 'choice_label' => function($writer) {
                     return $writer -> getFirstname(). ' ' . $writer -> getLastname();
                 },
@@ -98,37 +102,65 @@ class BookController extends AbstractController
                 ]])
             ->add('plot', TextareaType::class, ['label' => 'Description :', 'attr' => ['class' => 'form-control  text-center']])
             ->add('languageid', EntityType::class, [
-                // looks for choices from this entity
                 'class' => Language::class,
-                // uses the User.username property as the visible option string
                 'choice_label' => 'name',
                 'label' => 'Langue :',
                 'attr' => ['class' => 'form-control  text-center',
             ]])
             ->add('publicationDate', TextType::class, ['label' => 'Date de parution :', 'attr' => ['class' => 'form-control  text-center']])
             ->add('categoryid', EntityType::class, [
-                // looks for choices from this entity
                 'class' => Category::class,
-                // uses the User.username property as the visible option string
                 'choice_label' => 'name',
                 'label' => 'Catégorie :',
                 'attr' => ['class' => 'form-control  text-center',
                 ]])
-            ->add('quantity', IntegerType::class, ['label' => 'Quantité :', 'attr' => ['class' => 'form-control  text-center']])
-            ->add('save', SubmitType::class, ['label' => 'Enregistrer', 'attr' => ['class' => 'btn btn2 my-5']])
+            ->add('quantity', IntegerType::class, ['attr' => ['class' => 'form-control']])
+            ->add('cover', FileType::class, [
+                'label' => 'Image du livre',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid image',
+                    ])
+                ],
+            ])
+            ->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-primary']])
             ->getForm();
 
             $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            // $form->getData() holds the submitted values
-            // but, the original `$task` variable has also been updated
+
             $book = $form->getData();
-            $book -> setStock($book->getQuantity());
+           
+            /** @var UploadedFile $coverfile */
+            $cover = $form->get('cover')->getData();
 
-            // tell Doctrine you want to (eventually) save the Product (no queries yet)
+            if ($cover) {
+                $originalFilename = pathinfo($cover->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$cover->guessExtension();
+                try {
+                    $cover->move(
+                        $this->getParameter('covers_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+                $book->setCover($newFilename);
+            } else {
+                $book->setCover('black.jpg');
+            }
+            
+            $book->setStock($book->getQuantity());
+            $book->setAvailability('full');
             $entityManager->persist($book);
-
-            // actually executes the queries (i.e. the INSERT query)
             $entityManager->flush();
 
             return $this->redirectToRoute('books_listing');
@@ -166,9 +198,7 @@ class BookController extends AbstractController
 
         $form = $this->createFormBuilder($borrow)
         ->add('user', EntityType::class, [
-            // looks for choices from this entity
             'class' => User::class,
-            // uses the User.username property as the visible option string
             'choice_label' => 'card_number',
             'attr' => ['class' => 'form-control',
             ]])
@@ -177,18 +207,19 @@ class BookController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            // $form->getData() holds the submitted values
-            // but, the original `$task` variable has also been updated
             $borrow = $form->getData();
             if($book->getStock() > 0) {
-            $borrow->setBook($book);
-            $borrow->setBorrowingDate(date_create(date('Y-m-d')));
-            $borrow->generateReturningDate(date_create(date('Y-m-d')));
-            $book->updateStock(-1);
-            // actually executes the queries (i.e. the INSERT query)
-            $entityManager->persist($borrow);
-            $entityManager->flush();
-            // return $this->redirectToRoute('books_listing');
+                $borrow->setBook($book);
+                $borrow->setBorrowingDate(date_create(date('Y-m-d')));
+                $borrow->generateReturningDate(date_create(date('Y-m-d')));
+                $book->updateStock(-1);
+                if ($book->getStock()===0) {
+                    $book->setAvailability('out');
+                } else {
+                    $book->setAvailability('middle');
+                }
+                $entityManager->persist($borrow);
+                $entityManager->flush();
             }
         }
         $today = date_create(date('y-m-d'));
@@ -219,6 +250,11 @@ class BookController extends AbstractController
             $borrow->setReturningDate(date_create(date('Y-m-d')));
             $book = $entityManager->getRepository(Book::class)->find($id_book);
             $book->updateStock(+1);
+            if ($book->getStock()===$book->getQuantity()) {
+                $book->setAvailability('full');
+            } else {
+                $book->setAvailability('middle');
+            }
         }
         $entityManager->flush();
         return $this->redirectToRoute('books_listing');

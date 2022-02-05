@@ -45,7 +45,7 @@
     <h1 class='text-center text-decoration-underline my-5 font'>Catalogue <i class="fas fa-book-open"></i></h1>
 
     <div class='row'>
-        <div class='col-12 col-lg-3 px-5'>
+        <div class='col-12 col-lg-3 px-5 pb-5'>
             <a class="btn my-5" href="{{ path('book_add') }}"><i class="fas fa-book pe-2"></i>Ajouter un livre</a>
             <div class="form text-center">
               {{form(formFilter)}}  
@@ -66,7 +66,7 @@
                             <h5 class='fw-bold ps-3 pt-1 pb-2'>{{ book.getTitle() }}, {{ book.getWriterid().getFirstname() }} {{ book.getWriterid().getLastname() }}</h5>
                             <div class="row g-0" style="height:150px">
                                 <div class="ps-3 col-md-3">
-                                    <img src="../../image/{{book.getCover()}}" class="rounded-start" alt="book">
+                                    <img src="../../image/{{book.getCover()}}" class="rounded-start cover" alt="book">
                                 </div>
                                 <div class="col-md-9 my-3">
                                     <p class="card-text">{{book.truncatePlot()}}</p>

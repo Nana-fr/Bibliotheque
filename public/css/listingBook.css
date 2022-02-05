@@ -41,3 +41,7 @@ h5 {
 #book {
     border-left: 1px solid #412728;
 }
+
+.cover {
+    height: 150px;
+}
