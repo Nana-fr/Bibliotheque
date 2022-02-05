@@ -1,6 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Ajouter{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{asset('\css/listingBook.css')}}">
+{% endblock %}
 
 {% block body %}
 <style>
@@ -10,9 +13,9 @@
 <link rel="stylesheet" type="text/css" href="{{asset('\css/book.css')}}">
 
 <div class="example-wrapper">
-    <h1 class="text-center py-3">Ajouter un livre</h1>
+    <h1 class="text-center py-5">Ajouter un livre <i class="fas fa-book"></i></h1>
 
-   <div class="text-center">{{form(form)}}</div>
+   <div class="text-center w-50 mx-auto">{{form(form)}}</div>
 
 </div>
 {% endblock %}

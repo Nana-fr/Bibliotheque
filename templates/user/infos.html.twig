@@ -5,6 +5,9 @@
 {% block javascripts %}
 	<script type="text/javascript" src="../../js/form.js"></script>
 {% endblock %}
+{% block stylesheets %}
+		<link rel="stylesheet" type="text/css" href="{{asset('\css/user.css')}}">
+	{% endblock %}
 {% block body %}
 	<style>
 		.example-wrapper {
@@ -24,16 +27,28 @@
 		<h1 class='text-center my-5' id='titreDescription'>Description</h1>
 		<div class='row'>
 			<div class='col-4'>
-				<h5 class='subtitleUser'>Prénom :</h5>
-				<p>{{user.getFirstname()}}</p>
-			</div>
-			<div class='col-4'>
 				<h5 class='subtitleUser'>Nom :</h5>
-				<p>{{user.getLastname()}}</p>
+				<p>{{user.getFirstname()}} {{user.getLastname()}}</p>
 			</div>
 			<div class='col-4'>
 				<h5 class='subtitleUser'>Numéro de carte :</h5>
 				<p>{{user.getCardNumber()}}</p>
+			</div>
+			<div class='col-4'>
+				<h5 class='subtitleUser'>Adresse :</h5>
+				<p>{{user.getStreet()}} {{user.getCity()}} {{user.getPostalCode()}}</p>
+			</div>
+			<div class='col-4'>
+				<h5 class='subtitleUser'>Numéro de téléphone :</h5>
+				<p>{{user.getPhoneNumber()}}</p>
+			</div>
+			<div class='col-4'>
+				<h5 class='subtitleUser'>Date d'inscription :</h5>
+				<p>{{user.getRegistrationDate().format('Y-m-d')}}</p>
+			</div>
+			<div class='col-4'>
+				<h5 class='subtitleUser'>Email :</h5>
+				<p>{{user.getEmail()}}</p>
 			</div>
 		</div>
 		<table
