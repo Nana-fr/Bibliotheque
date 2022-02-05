@@ -2,88 +2,83 @@
 
 {% block title %}Description
 {% endblock %}
+
 {% block javascripts %}
 	<script type="text/javascript" src="../../js/form.js"></script>
 {% endblock %}
+
 {% block stylesheets %}
 		<link rel="stylesheet" type="text/css" href="{{asset('\css/user.css')}}">
-	{% endblock %}
+		<link rel="stylesheet" type="text/css" href="{{asset('\css/userInfo.css')}}">
+{% endblock %}
+
 {% block body %}
-	<style>
-		.example-wrapper {
-			margin: 1em auto;
-			max-width: 800px;
-			width: 95%;
-			font: 18px / 1.5 sans-serif;
-		}
-		.example-wrapper code {
-			background: #F5F5F5;
-			padding: 2px 6px;
-		}
-	</style>
 
-	<main class="container">
+	<main class="container-fluid">
 
-		<h1 class='text-center my-5' id='titreDescription'>Description</h1>
-		<div class='row'>
-			<div class='col-4'>
-				<h5 class='subtitleUser'>Nom :</h5>
-				<p>{{user.getFirstname()}} {{user.getLastname()}}</p>
+		<h1 class='text-center text-decoration-underline my-5' id='titreDescription'>Informations:</h1>
+
+		<div class='row justify-content-around'>
+			<div class="col-7 col-lg-5 my-5">
+				<table>
+					<thead>
+						<tr class="bg-title">
+							<th colspan="4" class="text-center pt-2 py-2"><h3 class="fw-bold">{{user.getFirstname()}} {{user.getLastname()}}</h3></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class='pt-3 ps-2'><i class="fas fa-address-card"></i> <span class='subtitleUser'>Numéro de carte:</span></td><td class='pt-3'>{{user.getCardNumber()}}</td>
+							<td class='pt-3'><i class="fas fa-calendar-alt"></i> <span class='subtitleUser'>Date d'inscription:</span></td><td class='pt-3 pe-3'>{{user.getRegistrationDate().format('Y-m-d')}}</td>
+						</tr>
+						<tr>
+							<td class='ps-2'><i class="fas fa-house-user"></i> <span class='subtitleUser'>Adresse:</span></td><td class='pt-4'>{{user.getStreet()}}<br>{{user.getPostalCode()}} {{user.getCity()}}</td>
+							<td><i class="fas fa-phone-alt"></i> <span class='subtitleUser'>Tél:</span></td><td class="pe-3">{{user.getPhoneNumber()}}</td>
+						</tr>
+						<tr >
+							<td></td><td></td>
+							<td class="pb-3"><i class="fas fa-at"></i> <span class='subtitleUser'>Email:</span></td>
+							<td class="pb-3 pe-3">
+							{% if user.getEmail() %}
+							{{user.getEmail()}}
+							{% else %}
+							Non renseigné
+							{% endif %}
+						</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
-			<div class='col-4'>
-				<h5 class='subtitleUser'>Numéro de carte :</h5>
-				<p>{{user.getCardNumber()}}</p>
-			</div>
-			<div class='col-4'>
-				<h5 class='subtitleUser'>Adresse :</h5>
-				<p>{{user.getStreet()}} {{user.getCity()}} {{user.getPostalCode()}}</p>
-			</div>
-			<div class='col-4'>
-				<h5 class='subtitleUser'>Numéro de téléphone :</h5>
-				<p>{{user.getPhoneNumber()}}</p>
-			</div>
-			<div class='col-4'>
-				<h5 class='subtitleUser'>Date d'inscription :</h5>
-				<p>{{user.getRegistrationDate().format('Y-m-d')}}</p>
-			</div>
-			<div class='col-4'>
-				<h5 class='subtitleUser'>Email :</h5>
-				<p>{{user.getEmail()}}</p>
-			</div>
-		</div>
-		<table
-			class='table table-striped text-center' id='tableUser'>
-			{# <thead>
+
+			<div class="col-7 col-lg-4 text-center my-5">
+
+				<h3>Liste des livres empruntés:</h3>
+
+				<table class='table table-bordered table-striped' id='tableUser'>
+					<thead>
+						<tr class="bg-title">
+							<th>Titre</th>
+							<th>Auteur</th>
+							<th>Date d'emprunt</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% if books is empty %}
+							<tr>
+								<td colspan="3">Actuellement aucun emprunt.</td>
+							</tr>
+						{% else %}
+							{% for book in books %}
 								<tr>
-									<th>Prénom</th>
-									<th>Nom</th>
-									<th>Numéro de carte</th>
-								</tr>
-							</thead> #}
-			<tbody>
-				{# <tr>
-										<td>{{user.getFirstname()}}</td>
-										<td>{{user.getLastname()}}</td>
-										<td>{{user.getCardNumber()}}</td>
-									</tr> #}
-			</tbody>
-			<tr>
-				<th colspan="3">Liste des livres empruntés:</th>
-			</tr>
-			{% if user.getBorrowings() %}
-				{% for book in user.getBorrowings() %}
-					<tr>
-						<td colspan="3">{{book.getBook().getTitle()}}
-							de
-							{{book.getBook().getWriterid().getFirstname}}
-							{{book.getBook().getWriterid().getLastname}}</td>
-					</tr>
-				{% endfor %}
-			{% else %}
-				<tr>
-					<td colspan="3">Actuellement aucun emprunt.</td>
-				</tr>
-			{% endif %}
-		</table>
+									<td>{{book.getBook().getTitle()}}</td>
+									<td>{{book.getBook().getWriterid().getFirstname}} {{book.getBook().getWriterid().getLastname}}</td>	
+									<td>{{book.getBorrowingDate().format('Y-m-d')}}</td>
+								</tr>	
+							{% endfor %}
+						{% endif %}
+					</tbody>
+				</table>
+			</div>
+		</div>	
 	</main>
 {% endblock %}
