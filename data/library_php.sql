@@ -192,34 +192,23 @@ CREATE TABLE `user` (
   `firstname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `lastname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-<<<<<<< HEAD
-  `card_number` int(11) DEFAULT NULL
-=======
   `card_number` int(11) DEFAULT NULL,
   `street` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `city` varchar(70) COLLATE utf8mb4_unicode_ci NOT NULL,
   `postal_code` int(11) NOT NULL,
   `phone_number` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `registration_date` date DEFAULT NULL
->>>>>>> master
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `user`
 --
 
-<<<<<<< HEAD
-INSERT INTO `user` (`id`, `username`, `roles`, `password`, `firstname`, `lastname`, `email`, `card_number`) VALUES
-(1, '123456', '[\"ROLE_USER\"]', '123', 'John', 'Doe', NULL, 123456),
-(2, '762761', '[\"ROLE_USER\"]', '$2y$13$xqbRYrsVnYp4uxka7Qb4wexqFHpj5srF3NaDDZz5AOSH1GSjxP0oC', 'Jane', 'Doe', 'jane.doe@gmail.com', 762761),
-(3, 'admin', '[\"ROLE_ADMIN\"]', '$2y$13$VUVILFqqUN.6mrFGxckxLOf0u1qMZYTafAt.cGGsziRClCBkga1t2', 'Amine', 'Hadmine', NULL, NULL);
-=======
 INSERT INTO `user` (`id`, `username`, `roles`, `password`, `firstname`, `lastname`, `email`, `card_number`, `street`, `city`, `postal_code`, `phone_number`, `registration_date`) VALUES
 (1, '123456', '[\"ROLE_USER\"]', '123', 'John', 'Doe', NULL, 123456, '23 Avenue jean Jaurès', 'Sotteville lès Rouen', 76300, '0605040302', '2022-02-02'),
 (2, '762761', '[\"ROLE_USER\"]', '$2y$13$xqbRYrsVnYp4uxka7Qb4wexqFHpj5srF3NaDDZz5AOSH1GSjxP0oC', 'Jane', 'Doe', 'jane.doe@gmail.com', 762761, '76 Rue du Renard', 'Rouen', 76000, '0102030405', '2022-02-03'),
 (3, 'admin', '[\"ROLE_ADMIN\"]', '$2y$13$VUVILFqqUN.6mrFGxckxLOf0u1qMZYTafAt.cGGsziRClCBkga1t2', 'Amine', 'Hadmine', NULL, NULL, '108 Rue saint Lô', 'Rouen', 76000, '0606060606', NULL),
 (5, '319449', '[\"ROLE_USER\"]', '$2y$10$5Dloax2TwpgZQDEN3VB/f.Wiz1o0RvZmi1OO3n7Lebv.uYItc/jQW', 'Usman', 'Youzeur', 'iamuser@user.com', 319449, '13 rue Lehman', 'Mont Saint Aignan', 76451, '0607080900', '2022-02-05');
->>>>>>> master
 
 -- --------------------------------------------------------
 
@@ -348,11 +337,7 @@ ALTER TABLE `nationality`
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-<<<<<<< HEAD
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-=======
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
->>>>>>> master
 
 --
 -- AUTO_INCREMENT pour la table `writer`

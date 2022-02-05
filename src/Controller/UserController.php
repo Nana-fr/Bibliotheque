@@ -29,17 +29,17 @@ class UserController extends AbstractController
     {
         $entityManager = $doctrine->getManager();
         $user = $entityManager->getRepository(User::class)->find($id);
-        //  dump($user->getBooks());
-        // dd($user);
+        $books = $user->getBorrowings();
+        
         return $this->render('user/infos.html.twig', [
             'user' => $user,
+            'books' => $books
         ]);
     }
     #[Route('/user/add', name: 'user_add')]
     public function addUser(Request $request, ManagerRegistry $doctrine): Response
     {
         $entityManager = $doctrine->getManager();
-        // creates a book object and initializes some data for this example
         $user = new User();
 
         $form = $this->createFormBuilder($user)
@@ -50,14 +50,11 @@ class UserController extends AbstractController
             ->add('postal_code', IntegerType::class, ['attr' => ['class' => 'form-control']])
             ->add('phone_number', TextType::class, ['attr' => ['class' => 'form-control']])
             ->add('email', TextType::class, ['attr' => ['required' => false, 'class' => 'form-control']])
-            
             ->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-primary']])
             ->getForm();
 
             $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            // $form->getData() holds the submitted values
-            // but, the original `$task` variable has also been updated
             $user = $form->getData();
             $user -> setRoles(['ROLE_USER']);
             $user -> setPassword('$2y$10$5Dloax2TwpgZQDEN3VB/f.Wiz1o0RvZmi1OO3n7Lebv.uYItc/jQW');
@@ -65,15 +62,11 @@ class UserController extends AbstractController
             $user -> setUsername($user -> getCardNumber());
             $user -> setRegistrationDate(date_create(date('Y-m-d')));
 
-            // tell Doctrine you want to (eventually) save the Product (no queries yet)
             $entityManager->persist($user);
-
-            // actually executes the queries (i.e. the INSERT query)
             $entityManager->flush();
 
             return $this->redirectToRoute('users_listing');
         }
-
 
             return $this->renderForm('user/add.html.twig', [
                 'form' => $form,

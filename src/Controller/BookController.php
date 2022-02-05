@@ -116,6 +116,7 @@ class BookController extends AbstractController
                 ]])
             ->add('quantity', IntegerType::class, ['attr' => ['class' => 'form-control']])
             ->add('cover', FileType::class, [
+                'attr' => ['class' => 'form-control'],
                 'label' => 'Image du livre',
                 'mapped' => false,
                 'required' => false,
@@ -130,7 +131,7 @@ class BookController extends AbstractController
                     ])
                 ],
             ])
-            ->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-primary']])
+            ->add('save', SubmitType::class, ['label' => 'Enregistrer', 'attr' => ['class' => 'btn btn2 my-4']])
             ->getForm();
 
             $form->handleRequest($request);
