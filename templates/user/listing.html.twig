@@ -1,36 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Hello UserController!
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-
-    <h1 class='text-center my-5'>Liste des utilisateurs!🎈😎</h1>
-
-    <table class="table">
-        <thead class="thead-dark">
-          <tr>
-            <th>Prénom</th>
-            <th>Nom</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-        {% for user in users %}
-        <tr>
-            {% if user.getRoles is same as(["ROLE_USER"]) %}
-            <td>{{ user.getFirstname() }}</td>
-            <td>{{ user.getLastname() }}</td>
-            <td><a href="{{ path('user_infos', {'id': user.getId()} )}}" class='btn btn-success'>Plus d'infos</a></td>
-            {% endif %}
-        </tr> 
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
+	<div class="container">
+		<h1 class='text-center my-5' id='titreUtilisateur'>Liste des utilisateurs</h1>
+		<div class="row d-flex justify-content-center">
+			<div class="col-md-6">
+				<a class="btn btn-dark" href="{{ path('user_add') }}"><i class="fas fa-user text-white"></i> Ajouter un utilisateur</a>
+				<table class="table" id='tableUser'>
+					<thead >
+						<tr>
+							<th class="text-center titleTable">Prénom</th>
+							<th class="text-center titleTable">Nom</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for user in users %}
+							<tr>
+								{% if user.getRoles is same as(["ROLE_USER"]) %}
+									<td class="text-center">{{ user.getFirstname() }}</td>
+									<td class="text-center">{{ user.getLastname() }}</td>
+									<td class="text-center">
+										<a href="{{ path('user_infos', {'id': user.getId()} )}}" class='btn' id='btnUser'>Plus d'infos</a>
+									</td>
+								{% endif %}
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>	
+	</div>
 {% endblock %}

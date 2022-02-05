@@ -2,6 +2,7 @@
 
 {% block stylesheets %}
     <link rel='stylesheet' type="text/css" href='https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css'>
+    <link rel="stylesheet" type="text/css" href="\Bibliotheque\public\css\listingBook.css">
 {% endblock %}
 
 {% block javascripts %}
@@ -38,18 +39,17 @@
 {% block title %}Catalogue{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+
 
 <main class='container-fluid mb-5'>
-    <h1 class='text-center text-decoration-underline my-5'>Catalogue <i class="fas fa-book"></i></h1>
+    <h1 class='text-center text-decoration-underline my-5 font'>Catalogue <i class="fas fa-book-open"></i></h1>
 
     <div class='row'>
         <div class='col-12 col-lg-3 px-5'>
-            <a class="btn btn-info my-5" href="{{ path('book_add') }}">Ajouter un livre</a>
-            {{form(formFilter)}}
+            <a class="btn my-5" href="{{ path('book_add') }}"><i class="fas fa-book pe-2"></i>Ajouter un livre</a>
+            <div class="form text-center">
+              {{form(formFilter)}}  
+            </div>
         </div>
         <div class='col-12 col-lg-9'>
             <table id='example' class='display'>
@@ -62,23 +62,23 @@
                 <tbody>
                     {% for book in books %}
                     <tr>
-                        <td style="max-width: 450px">
-                            <h5 class='pb-2 border-bottom'>{{ book.getTitle() }}, {{ book.getWriterid().getFirstname() }} {{ book.getWriterid().getLastname() }}</h5>
+                        <td id='book' style="max-width: 450px">
+                            <h5 class='fw-bold ps-3 pt-1 pb-2'>{{ book.getTitle() }}, {{ book.getWriterid().getFirstname() }} {{ book.getWriterid().getLastname() }}</h5>
                             <div class="row g-0" style="height:150px">
                                 <div class="ps-3 col-md-3">
-                                    <img src="../../image/black.jpg" class="rounded-start" alt="book">
+                                    <img src="../../image/{{book.getCover()}}" class="rounded-start" alt="book">
                                 </div>
                                 <div class="col-md-9 my-3">
-                                    <p class="card-text">{{book.getPlot()}}</p>
+                                    <p class="card-text">{{book.truncatePlot()}}</p>
                                 </div>
                             </div>
-                            <div class="text-end border-top">Nombre d'exemplaire(s) disponible(s) {{ book.getStock() }}/{{ book.getQuantity() }}</div>
+                            <div class="text-end fw-bold pt-1">Nombre d'exemplaire(s) disponible(s) {{ book.getStock() }}/{{ book.getQuantity() }}</div>
                         </td>
                         <td>
                             <div class='d-flex flex-column justify-content-between align-items-center'>
-                                <a class="btn btn-success mb-2" href="{{ path('book_infos', {'id': book.getId()} )}}">Plus d'infos</a>
+                                <a class="btn mb-4" href="{{ path('book_infos', {'id': book.getId()} )}}">Plus d'infos</a>
                                 {% if book.getStock() != 0 %}
-                                <a class="btn btn-danger mt-2" href="{{ path('book_delete', {'id': book.getId()} )}}">Supprimer</a>
+                                <a class="btn btn2 mt-4" href="{{ path('book_delete', {'id': book.getId()} )}}"><i class="fas fa-trash-alt text-white pe-2"></i>Supprimer</a>
                                 {% endif %}
                             </div> 
                         </td>   
