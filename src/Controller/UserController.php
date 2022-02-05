@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -44,7 +45,11 @@ class UserController extends AbstractController
         $form = $this->createFormBuilder($user)
             ->add('firstname', TextType::class, ['attr' => ['class' => 'form-control']])
             ->add('lastname', TextType::class, ['attr' => ['class' => 'form-control']])
-            ->add('email', TextType::class, ['attr' => ['class' => 'form-control']])
+            ->add('street', TextType::class, ['attr' => ['class' => 'form-control']])
+            ->add('city', TextType::class, ['attr' => ['class' => 'form-control']])
+            ->add('postal_code', IntegerType::class, ['attr' => ['class' => 'form-control']])
+            ->add('phone_number', TextType::class, ['attr' => ['class' => 'form-control']])
+            ->add('email', TextType::class, ['attr' => ['required' => false, 'class' => 'form-control']])
             
             ->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-primary']])
             ->getForm();
@@ -58,6 +63,7 @@ class UserController extends AbstractController
             $user -> setPassword('$2y$10$5Dloax2TwpgZQDEN3VB/f.Wiz1o0RvZmi1OO3n7Lebv.uYItc/jQW');
             $user -> setCardNumber(mt_Rand(100000,999999));
             $user -> setUsername($user -> getCardNumber());
+            $user -> setRegistrationDate(date_create(date('Y-m-d')));
 
             // tell Doctrine you want to (eventually) save the Product (no queries yet)
             $entityManager->persist($user);

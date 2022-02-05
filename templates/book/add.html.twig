@@ -1,17 +1,21 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Ajouter{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{asset('\css/listingBook.css')}}">
+{% endblock %}
 
 {% block body %}
 <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
+<link rel="stylesheet" type="text/css" href="{{asset('\css/book.css')}}">
 
 <div class="example-wrapper">
-    <h1>Ajouter un livre</h1>
+    <h1 class="text-center py-5">Ajouter un livre <i class="fas fa-book"></i></h1>
 
-   {{form(form)}}
+   <div class="text-center w-50 mx-auto">{{form(form)}}</div>
 
 </div>
 {% endblock %}

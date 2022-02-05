@@ -91,25 +91,28 @@ class BookController extends AbstractController
         $book = new Book();
 
         $form = $this->createFormBuilder($book)
-            ->add('title', TextType::class, ['attr' => ['class' => 'form-control']])
+            ->add('title', TextType::class, ['label' => 'Titre :', 'attr' => ['class' => 'form-control  text-center']])
             ->add('writerid', EntityType::class, [
                 'class' => Writer::class,
                 'choice_label' => function($writer) {
                     return $writer -> getFirstname(). ' ' . $writer -> getLastname();
                 },
-                'attr' => ['class' => 'form-control',
+                'label' => 'Auteur :',
+                'attr' => ['class' => 'form-control text-center',
                 ]])
-            ->add('plot', TextareaType::class, ['attr' => ['class' => 'form-control']])
+            ->add('plot', TextareaType::class, ['label' => 'Description :', 'attr' => ['class' => 'form-control  text-center']])
             ->add('languageid', EntityType::class, [
                 'class' => Language::class,
                 'choice_label' => 'name',
-                'attr' => ['class' => 'form-control',
+                'label' => 'Langue :',
+                'attr' => ['class' => 'form-control  text-center',
             ]])
-            ->add('publicationDate', TextType::class, ['attr' => ['class' => 'form-control']])
+            ->add('publicationDate', TextType::class, ['label' => 'Date de parution :', 'attr' => ['class' => 'form-control  text-center']])
             ->add('categoryid', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name',
-                'attr' => ['class' => 'form-control',
+                'label' => 'Catégorie :',
+                'attr' => ['class' => 'form-control  text-center',
                 ]])
             ->add('quantity', IntegerType::class, ['attr' => ['class' => 'form-control']])
             ->add('cover', FileType::class, [
