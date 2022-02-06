@@ -43,7 +43,7 @@ class UserController extends AbstractController
         $user = new User();
 
         $form = $this->createFormBuilder($user)
-            ->add('firstname', TextType::class, ['attr' => ['class' => 'form-control']])
+            ->add('firstname', TextType::class, ['attr' => ['class' => 'form-control', 'label' => 'firstname']])
             ->add('lastname', TextType::class, ['attr' => ['class' => 'form-control']])
             ->add('street', TextType::class, ['attr' => ['class' => 'form-control']])
             ->add('city', TextType::class, ['attr' => ['class' => 'form-control']])

@@ -1,4 +1,4 @@
-#titreUtilisateur, #titreDescription{
+#titreUtilisateur, #titreDescription, #titleAddUser{
     text-decoration: underline;
     font-weight: bolder;
 }
@@ -6,11 +6,11 @@
     border-color: black;
 }
 #btnUser{
-    background-color: black;
+    background: linear-gradient(45deg, rgb(65, 39, 40),#b87c4c)!important;
     color: #F2E7BF;
 }
 #btnUser:hover{
-    background-color: #F2E7BF;
+    background: linear-gradient(45deg,#b87c4c, #F2E7BF)!important;
     color: black;
     border-color: black;
 }
@@ -20,4 +20,24 @@
 .subtitleUser{
     text-decoration: underline;
     font-weight: bolder;
+}
+#formAddUser{
+    border: 1px solid black;
+    background: linear-gradient(90deg,#b87c4c, #8f4b1dd5 50%,#b87c4c)!important;
+    -webkit-box-shadow: 0px 10px 13px -7px #000000, 7px 7px 14px 0px rgba(65,39,40,0.5); 
+    box-shadow: 0px 10px 13px -7px #000000, 7px 7px 14px 0px rgba(65,39,40,0.5);
+}
+.required{
+    color: #F2E7BF;
+    padding-top: 1rem;
+    text-decoration: underline;
+}
+#form_save{
+    margin: 1rem  35% 1rem 35%;
+    width: 30%;
+}
+#form_save:hover{
+    background: linear-gradient(45deg, rgb(65, 39, 40),#b87c4c)!important;
+    color: black;
+    border-color: black;
 }
