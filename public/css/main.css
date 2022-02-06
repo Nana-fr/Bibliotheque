@@ -7,16 +7,15 @@ body{
 }
 
 header {
-    background-image: url("../../image/header.jpg");
+    background-image: url("../../image/header2.jpg");
     background-size: 100% 100%;
     width: 100vw;
-    height: 25vh;
+    height: 40vh;
 }
 .navbar {
     background: linear-gradient(90deg,#b87c4c, #faf1ce 50%,#b87c4c)!important;
     border-top: 1px solid #412728;
     border-bottom: 1px solid #412728;
-    padding: 0rem!important;
 }
 .nav-item {
     margin: 0rem 4rem;

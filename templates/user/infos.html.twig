@@ -18,9 +18,9 @@
 
 		<h1 class='text-center text-decoration-underline my-5' id='titreDescription'>Informations:</h1>
 
-		<div class='row justify-content-around'>
-			<div class="col-7 col-lg-5 my-5">
-				<table>
+		<div class='row justify-content-center'>
+			<div class="col-10 col-lg-5 my-5">
+				<table class='mx-auto'>
 					<thead>
 						<tr class="bg-title">
 							<th colspan="4" class="text-center pt-2 py-2"><h3 class="fw-bold">{{user.getFirstname()}} {{user.getLastname()}}</h3></th>
@@ -49,12 +49,15 @@
 					</tbody>
 				</table>
 			</div>
+		</div>
 
-			<div class="col-7 col-lg-4 text-center my-5">
+		<div class='row justify-content-center mb-5'>
+			<div class="col-10 col-md-7 col-lg-5 text-center my-5">
 
 				<h3>Liste des livres empruntés:</h3>
 
-				<table class='table table-bordered table-striped' id='tableUser'>
+				<div id='table'>
+				<table class='table table-bordered table-striped mx-auto' id='tableUser'>
 					<thead>
 						<tr class="bg-title">
 							<th>Titre</th>
@@ -78,6 +81,7 @@
 						{% endif %}
 					</tbody>
 				</table>
+				</div>
 			</div>
 		</div>	
 	</main>
