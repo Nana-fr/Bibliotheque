@@ -49,7 +49,7 @@ class UserController extends AbstractController
             ->add('city', TextType::class, ['attr' => ['class' => 'form-control']])
             ->add('postal_code', IntegerType::class, ['attr' => ['class' => 'form-control']])
             ->add('phone_number', TextType::class, ['attr' => ['class' => 'form-control']])
-            ->add('email', TextType::class, ['attr' => ['required' => false, 'class' => 'form-control']])
+            ->add('email', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
             ->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-primary']])
             ->getForm();
 
@@ -67,10 +67,8 @@ class UserController extends AbstractController
 
             return $this->redirectToRoute('users_listing');
         }
-
             return $this->renderForm('user/add.html.twig', [
                 'form' => $form,
             ]); 
-            
     }
 }

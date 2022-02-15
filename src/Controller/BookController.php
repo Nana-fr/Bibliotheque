@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityRepository;
 
 
 class BookController extends AbstractController
@@ -166,8 +167,6 @@ class BookController extends AbstractController
 
             return $this->redirectToRoute('books_listing');
         }
-
-
             return $this->renderForm('book/add.html.twig', [
                 'form' => $form,
             ]); 
@@ -200,6 +199,11 @@ class BookController extends AbstractController
         $form = $this->createFormBuilder($borrow)
         ->add('user', EntityType::class, [
             'class' => User::class,
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('u')
+                    ->andWhere('u.roles = :roles')
+                    ->setParameter('roles', '["ROLE_USER"]');
+            },
             'choice_label' => 'card_number',
             'attr' => ['class' => 'form-control',
             ]])
