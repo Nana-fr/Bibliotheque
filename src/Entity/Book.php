@@ -292,8 +292,12 @@ class Book
     public function truncatePlot(): string
     {
         $value = $this->getPlot();
-        $ellips = mb_substr($value,0,450);
-        return $ellips.'...';
+        if (strlen($value) > 450 ) {
+          $ellips = mb_substr($value,0,450);
+          return $ellips.'...';
+        } else {
+          return $value;  
+        }
     }
 
     public function getCover(): ?string
