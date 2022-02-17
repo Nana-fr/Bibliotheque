@@ -115,7 +115,6 @@ class Borrowing
     public function setDueDate(\DateTimeInterface $dueDate): self
     {
         $this->dueDate = $dueDate;
-
         return $this;
     }
 }

@@ -86,11 +86,6 @@ class Book
     private $quantity;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Status::class, inversedBy="books")
-     */
-    private $status;
-
-    /**
      * @ORM\OneToMany(targetEntity=Borrowing::class, mappedBy="book")
      */
     private $borrowings;
@@ -107,7 +102,6 @@ class Book
 
     public function __construct()
     {
-        $this->status = new ArrayCollection();
         $this->borrowings = new ArrayCollection();
     }
 
@@ -263,31 +257,6 @@ class Book
 
         return $this;
     }
-
-    /**
-     * @return Collection|Status[]
-     */
-    public function getStatus(): Collection
-    {
-        return $this->status;
-    }
-
-    public function addStatus(Status $status): self
-    {
-        if (!$this->status->contains($status)) {
-            $this->status[] = $status;
-        }
-
-        return $this;
-    }
-
-    public function removeStatus(Status $status): self
-    {
-        $this->status->removeElement($status);
-
-        return $this;
-    }
-
 
     public function truncatePlot(): string
     {

@@ -25,10 +25,19 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityRepository;
+use App\Repository\UserRepository;
+use App\Repository\BookRepository;
 
 
 class BookController extends AbstractController
 {
+
+    public function __construct(UserRepository $userRepository, BookRepository $bookRepository)
+    {
+        $this->userRepository = $userRepository;
+        $this->bookRepository = $bookRepository;
+    }
+
     #[Route('/books/listing', name: 'books_listing')]
     public function bookListing(ManagerRegistry $doctrine, Request $request): Response
     {
@@ -59,7 +68,7 @@ class BookController extends AbstractController
             'choices'  => [
                 'Disponible' => 'Disponible',
                 'Emprunté'     => 'Emprunté',
-                'Indisponible' => 'out',
+                'Indisponible' => 'Indisponible',
             ],
             'attr' => ['class' => 'form-control my-2']
         ])
@@ -71,15 +80,22 @@ class BookController extends AbstractController
     if ($formFilter->isSubmitted() && $formFilter->isValid()) {
         
         $data = $formFilter->getData();
-        if ($data['availability']==='Disponible') {
-            $data['availability'] = [0=>'full', 1=>'middle'];
-        } else if ($data['availability']==='Emprunté') {
-            $data['availability'] = [0=>'out', 1=>'middle'];
-        }
+        // dd($data);
+        // if ($data['availability']==='Disponible') {
+        //     $data['availability'] = [0=>'full', 1=>'middle'];
+        // } else if ($data['availability']==='Emprunté') {
+        //     $data['availability'] = [0=>'out', 1=>'middle'];
+        // }
         $data = array_filter($data);
     }
 
-        $books=$doctrine->getRepository(Book::class)->findBy($data);
+    if ($data) {
+        dd($data);
+        $books=$this->bookRepository->findByBookFilter($data);
+        
+    }
+
+        $books=$doctrine->getRepository(Book::class)->findAll();
         return $this->renderForm('book/listing.html.twig', [
             'books' => $books,
             'formFilter' => $formFilter,
@@ -190,20 +206,19 @@ class BookController extends AbstractController
     }
 
     #[Route('/book/infos/{id}', name: 'book_infos')]
-    public function getBook(ManagerRegistry $doctrine, int $id,Request $request): Response
+    public function getBook(ManagerRegistry $doctrine, int $id,Request $request, UserRepository $userRepository): Response
     {
         $entityManager = $doctrine->getManager();
         $book = $entityManager->getRepository(Book::class)->find($id);
         $borrow = new Borrowing;
 
+        // $userList = $entityManager->getRepository(User::class)->findBy(['roles' => '["ROLE_USER"]']);
+        // dd($userList);
+
         $form = $this->createFormBuilder($borrow)
         ->add('user', EntityType::class, [
             'class' => User::class,
-            'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('u')
-                    ->andWhere('u.roles = :roles')
-                    ->setParameter('roles', '["ROLE_USER"]');
-            },
+            'query_builder' => $this->userRepository->getUsers(),
             'choice_label' => 'card_number',
             'attr' => ['class' => 'form-control',
             ]])
