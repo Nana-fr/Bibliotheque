@@ -39,7 +39,7 @@ class BookController extends AbstractController
     }
 
     #[Route('/books/listing', name: 'books_listing')]
-    public function bookListing(ManagerRegistry $doctrine, Request $request): Response
+    public function bookListing(ManagerRegistry $doctrine, Request $request, BookRepository $bookRepository): Response
     {
         $data = [];
         $formFilter = $this->createFormBuilder()
@@ -80,22 +80,18 @@ class BookController extends AbstractController
     if ($formFilter->isSubmitted() && $formFilter->isValid()) {
         
         $data = $formFilter->getData();
-        // dd($data);
-        // if ($data['availability']==='Disponible') {
-        //     $data['availability'] = [0=>'full', 1=>'middle'];
-        // } else if ($data['availability']==='Emprunté') {
-        //     $data['availability'] = [0=>'out', 1=>'middle'];
-        // }
         $data = array_filter($data);
     }
 
     if ($data) {
-        dd($data);
-        $books=$this->bookRepository->findByBookFilter($data);
-        
+      
+        $books=$this->bookRepository->findAllFilter($data);
+
+    } else {
+         $books=$doctrine->getRepository(Book::class)->findAll();
     }
 
-        $books=$doctrine->getRepository(Book::class)->findAll();
+       
         return $this->renderForm('book/listing.html.twig', [
             'books' => $books,
             'formFilter' => $formFilter,
@@ -177,7 +173,6 @@ class BookController extends AbstractController
             }
             
             $book->setStock($book->getQuantity());
-            $book->setAvailability('full');
             $entityManager->persist($book);
             $entityManager->flush();
 
@@ -212,9 +207,6 @@ class BookController extends AbstractController
         $book = $entityManager->getRepository(Book::class)->find($id);
         $borrow = new Borrowing;
 
-        // $userList = $entityManager->getRepository(User::class)->findBy(['roles' => '["ROLE_USER"]']);
-        // dd($userList);
-
         $form = $this->createFormBuilder($borrow)
         ->add('user', EntityType::class, [
             'class' => User::class,
@@ -233,11 +225,6 @@ class BookController extends AbstractController
                 $borrow->setBorrowingDate(date_create(date('Y-m-d')));
                 $borrow->generateReturningDate(date_create(date('Y-m-d')));
                 $book->updateStock(-1);
-                if ($book->getStock()===0) {
-                    $book->setAvailability('out');
-                } else {
-                    $book->setAvailability('middle');
-                }
                 $entityManager->persist($borrow);
                 $entityManager->flush();
             }
@@ -270,11 +257,6 @@ class BookController extends AbstractController
             $borrow->setReturningDate(date_create(date('Y-m-d')));
             $book = $entityManager->getRepository(Book::class)->find($id_book);
             $book->updateStock(+1);
-            if ($book->getStock()===$book->getQuantity()) {
-                $book->setAvailability('full');
-            } else {
-                $book->setAvailability('middle');
-            }
         }
         $entityManager->flush();
         return $this->redirectToRoute('books_listing');

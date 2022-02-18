@@ -91,11 +91,6 @@ class Book
     private $borrowings;
 
     /**
-     * @ORM\Column(type="string")
-     */
-    private $availability;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $cover;
@@ -243,18 +238,6 @@ class Book
     {
         $realStock = $this->getStock() + $value;
         $this->stock = $realStock;
-        return $this;
-    }
-
-    public function getAvailability(): ?string
-    {
-        return $this->availability;
-    }
-
-    public function setAvailability(string $availability): self
-    {
-        $this->availability = $availability;
-
         return $this;
     }
 

@@ -49,7 +49,7 @@ class BookRepository extends ServiceEntityRepository
     */
 
 
-    public function findByBookFilter($data)
+    public function findAllFilter($data)
     {
         $qb = $this->createQueryBuilder('b');
         foreach($data as $key => $value) {
@@ -62,13 +62,11 @@ class BookRepository extends ServiceEntityRepository
                 $qb->andWhere('b.stock = :val')
                     ->setParameter('val', 0)  ;
             } else {
-                $data[$key] = $value;
                 $qb->andWhere('b.'.$key.' = :'.$key)       
-                    ->setParameter($key, $value);
+                    ->setParameter($key, $value->getId());
             }
         }
-        $qb ->getQuery()
-            ->getResult();
-        return $qb;
+        $query = $qb ->getQuery();
+        return $query->execute();
     }
 }
